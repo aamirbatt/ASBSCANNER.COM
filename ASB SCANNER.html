@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>ASB Scanner — Binance/MEXC • IST • Admin PRO</title>
+<title>ASB Scanner — Binance (Spot) • IST • Admin PRO</title>
 <style>
   :root{
     --bg:#0b1220; --panel:#0f172a; --panel2:#0d1628;
@@ -17,6 +17,7 @@
     background:radial-gradient(1200px 600px at 10% -10%,#0d1a30 0,#0b1220 40%,#0a1020 100%);
     color:var(--text);
     font:14px system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;
   }
   *{box-sizing:border-box}
   .wrap{max-width:1320px;margin:22px auto;padding:0 14px}
@@ -36,25 +37,27 @@
     border:1px solid var(--border);
     border-radius:12px;
     padding:8px 10px;min-height:36px;outline:none;
+    transition:border-color .15s ease, transform .05s ease;
   }
   input:focus,select:focus{border-color:#355080;box-shadow:0 0 0 3px rgba(53,80,128,.22)}
-  button{cursor:pointer}
+  button{cursor:pointer;user-select:none}
   .btn{
     background:linear-gradient(90deg,#1b2a44,#17354a);
     border-color:#2b3b5a;
     box-shadow:0 6px 16px rgba(0,0,0,.25)
   }
-  .btn:disabled{opacity:.45;cursor:not-allowed}
+  .btn:hover{transform:translateY(-1px)} .btn:active{transform:translateY(0)}
+  .btn:disabled{opacity:.5;cursor:not-allowed}
   .pill{
     padding:4px 8px;border-radius:999px;border:1px solid var(--border);
     font-size:12px;display:inline-flex;align-items:center;gap:6px;background:var(--chip)
   }
   .pill.ok{background:rgba(16,61,39,.55);border-color:#2b6b46;color:#9ae6b4}
   .pill.bad{background:rgba(61,16,16,.55);border-color:#6b2b2b;color:#ff7b7b}
-  .pill.warn{background:rgba(61,49,16,.55);border-color:#6b5a2b;color:#ffd166}
   .note{color:var(--muted);font-size:12px}
   .stats{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
   .stat{padding:6px 10px;border-radius:999px;border:1px solid var(--border);font-size:12px;background:#0c1426}
+
   .grid{margin-top:12px;border:1px solid var(--border);border-radius:18px;overflow:auto;height:56vh}
   table{width:100%;border-collapse:separate;border-spacing:0}
   thead th{
@@ -75,9 +78,11 @@
   }
   thead th.sort-asc::after{opacity:.9;transform:translateY(-50%) rotate(-135deg)}
   thead th.sort-desc::after{opacity:.9;transform:translateY(-50%) rotate(45deg)}
+
   .bar{width:120px;height:8px;border-radius:999px;background:#0c1426;border:1px solid var(--border);position:relative;display:inline-block;overflow:hidden}
   .bar>i{position:absolute;top:-3px;width:2px;height:14px;background:#6dd6c8;border-radius:1px}
   .bar .lo{left:0}.bar .hi{right:0}.bar .p{background:var(--ok)}
+
   .trade-btn{
     display:inline-flex;align-items:center;justify-content:center;
     padding:7px 10px;border-radius:12px;
@@ -86,14 +91,14 @@
     color:var(--text); text-decoration:none; font-size:12px;
   }
   .trade-btn:hover{border-color:rgba(94,234,212,.85); background:rgba(94,234,212,.16)}
-  .hidden{display:none !important}
+
   .errbox{
-    margin-top:10px;
-    border:1px solid #6b2b2b;
-    background:rgba(61,16,16,.35);
-    padding:10px;border-radius:14px;
-    color:#ffd6d6;
+    margin-top:10px;border:1px solid #6b2b2b;background:rgba(61,16,16,.35);
+    padding:10px;border-radius:14px;color:#ffd6d6;white-space:pre-wrap
   }
+  .hidden{display:none !important}
+  .probox{border:1px dashed #2b6b46;background:rgba(16,61,39,.18);border-radius:16px;padding:10px}
+  @media (max-width: 980px){.grid{height:58vh}}
 </style>
 </head>
 
@@ -102,27 +107,13 @@
 
   <div class="panel">
     <div class="row" style="align-items:center;justify-content:space-between">
-      <h2>ASB Scanner <span class="note">— Binance works instantly • MEXC needs Proxy</span></h2>
-      <div class="row" style="align-items:center">
-        <a class="trade-btn" href="https://promote.mexc.co/r/5S4fzXCz" target="_blank" rel="noopener noreferrer">Join MEXC (Referral)</a>
+      <h2>ASB Scanner <span class="note">— Binance Spot • IST • Admin PRO</span></h2>
+      <div class="row">
         <button id="btnRefresh" class="btn">Refresh</button>
       </div>
     </div>
 
     <div class="row" style="margin-top:10px">
-      <div class="col">
-        <label>Exchange</label>
-        <select id="exchange">
-          <option value="binance" selected>Binance (Spot)</option>
-          <option value="mexc">MEXC (Spot) — needs proxy</option>
-        </select>
-      </div>
-
-      <div class="col">
-        <label>Proxy (ONLY for MEXC)</label>
-        <input id="proxy" placeholder='Example: https://your-proxy/?url={url}'>
-      </div>
-
       <div class="col"><label>Target Date (IST)</label><input type="date" id="date"></div>
       <div class="col"><label>Target Time (IST)</label><input type="time" id="timeIst" step="60"></div>
 
@@ -141,8 +132,7 @@
         </select>
       </div>
 
-      <div class="col">
-        <label>Top N (FREE)</label>
+      <div class="col"><label>Top N (FREE)</label>
         <select id="topnFree">
           <option>20</option>
           <option selected>60</option>
@@ -150,8 +140,7 @@
         </select>
       </div>
 
-      <div class="col" id="topnProWrap">
-        <label>Top N (PRO)</label>
+      <div class="col" id="topnProWrap"><label>Top N (PRO)</label>
         <select id="topnPro">
           <option>150</option>
           <option>200</option>
@@ -161,36 +150,42 @@
       </div>
 
       <div class="col"><label>Near threshold (%)</label><input type="number" id="thr" value="0.25" step="0.01" min="0"></div>
-      <div class="col"><label>Quick search</label><input id="search" placeholder="BTC, ETH, PEPE…"></div>
+      <div class="col" style="flex:1;min-width:240px"><label>Quick search</label><input id="search" placeholder="BTC, ETH, PEPE…"></div>
 
       <div class="col"><label> </label><button id="btnLoad" class="btn">Load Top</button></div>
       <div class="col"><label> </label><button id="btnExport" class="btn">Export CSV (PRO)</button></div>
     </div>
 
-    <div class="row" style="margin-top:10px;align-items:center;justify-content:space-between">
-      <div class="row" style="align-items:center;gap:10px">
-        <span class="pill bad" id="adminPill">Admin: <b>Locked</b></span>
-        <label class="pill"><input id="proToggle" type="checkbox" style="accent-color:#4fd1c5"> Enable PRO</label>
+    <div class="row" style="margin-top:10px">
+      <div class="col" style="min-width:420px;flex:1">
+        <div class="probox">
+          <div class="row" style="align-items:center;justify-content:space-between">
+            <div>
+              <span class="pill bad" id="adminPill">Admin: <b>Locked</b></span>
+              <div class="note" style="margin-top:4px">Admin PIN is a basic lock on static site (not real security).</div>
+            </div>
+            <div class="row" style="align-items:center">
+              <label class="pill"><input id="proToggle" type="checkbox" style="accent-color:#4fd1c5"> Enable PRO</label>
+              <input id="pin" type="password" inputmode="numeric" maxlength="4" placeholder="Admin PIN" style="width:140px">
+              <button id="btnUnlock" class="btn">Unlock</button>
+              <button id="btnLock" class="btn">Lock</button>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <div class="row" style="align-items:center;gap:8px">
-        <input id="pin" type="password" inputmode="numeric" maxlength="4" placeholder="Admin PIN" style="width:140px">
-        <button id="btnUnlock" class="btn">Unlock</button>
-        <button id="btnLock" class="btn">Lock</button>
+      <div class="col" style="min-width:320px">
+        <div class="stats">
+          <span class="stat">Rows: <strong id="rowCount">0</strong></span>
+          <span class="stat">Mode: <strong id="modeTxt">FREE</strong></span>
+          <span class="stat">Status: <strong id="statusTxt">Idle</strong></span>
+        </div>
+        <div id="err" class="errbox hidden"></div>
       </div>
     </div>
-
-    <div class="stats">
-      <span class="stat">Rows: <strong id="rowCount">0</strong></span>
-      <span class="stat">Mode: <strong id="modeTxt">FREE</strong></span>
-      <span class="stat">Status: <strong id="statusTxt">Idle</strong></span>
-    </div>
-
-    <div id="err" class="errbox hidden"></div>
 
     <p class="note" style="margin-top:10px">
-      If you choose <b>MEXC</b> and it shows an error: MEXC blocks browser calls (CORS). Use a proxy in the Proxy box.
-      Binance usually works without proxy.
+      Binance is used because it works on GitHub Pages without CORS errors. Start with TopN=60 for fast load.
     </p>
   </div>
 
@@ -230,8 +225,6 @@
   const $ = (q) => document.querySelector(q);
   const $$ = (q) => Array.from(document.querySelectorAll(q));
 
-  const exchangeSel = $("#exchange");
-  const proxyInp = $("#proxy");
   const dateInp = $("#date");
   const timeInp = $("#timeIst");
   const tfSel = $("#tf");
@@ -274,25 +267,14 @@
     errBox.classList.add("hidden");
   }
 
-  async function fetchJson(url, timeoutMs=12000){
+  async function fetchJson(url, timeoutMs=15000){
     const ctrl = new AbortController();
     const t = setTimeout(() => ctrl.abort(), timeoutMs);
     try{
       const r = await fetch(url, { signal: ctrl.signal });
-      if(!r.ok) throw new Error("HTTP " + r.status);
+      if(!r.ok) throw new Error("HTTP " + r.status + " for " + url);
       return await r.json();
-    } finally {
-      clearTimeout(t);
-    }
-  }
-
-  function applyProxy(rawUrl){
-    const p = (proxyInp.value || "").trim();
-    if(!p) return rawUrl;
-    // If proxy contains {url}, replace it. Else append ?url=
-    if(p.includes("{url}")) return p.replaceAll("{url}", encodeURIComponent(rawUrl));
-    const join = p.includes("?") ? "&" : "?";
-    return p + join + "url=" + encodeURIComponent(rawUrl);
+    } finally { clearTimeout(t); }
   }
 
   /******** IST TIME ********/
@@ -343,7 +325,7 @@
     return `<span class="bar"><i class="lo"></i><i class="hi"></i><i class="p" style="left:${px}px"></i></span>`;
   }
 
-  /******** SECURITY STATE (BASIC) ********/
+  /******** BASIC SECURITY STATE ********/
   function isAdmin(){ return localStorage.getItem(ADMIN_KEY) === "1"; }
   function isPro(){ return localStorage.getItem(PRO_KEY) === "1"; }
 
@@ -368,8 +350,8 @@
 
     topnProWrap.classList.toggle("hidden", !admin);
     proToggle.checked = pro;
-    btnExport.disabled = !(admin && pro);
 
+    btnExport.disabled = !(admin && pro);
     modeTxt.textContent = (admin && pro) ? "PRO" : "FREE";
   }
 
@@ -389,7 +371,7 @@
     setPro(proToggle.checked);
   });
 
-  /******** DATA ********/
+  /******** STATE ********/
   const state = {
     rows: new Map(), // symbol -> row
     sortKey: "closeness",
@@ -404,9 +386,7 @@
   }
 
   function tradeUrl(sym){
-    // Just open exchange page. Works for both.
-    if(exchangeSel.value === "binance") return `https://www.binance.com/en/trade/${encodeURIComponent(sym.replace("USDT","_USDT"))}?type=spot`;
-    return `https://www.mexc.com/exchange/${encodeURIComponent(sym)}`;
+    return `https://www.binance.com/en/trade/${encodeURIComponent(sym.replace("USDT","_USDT"))}?type=spot`;
   }
 
   function render(){
@@ -480,7 +460,7 @@
     await Promise.all(runners);
   }
 
-  /******** EXCHANGE API ********/
+  /******** BINANCE API ********/
   async function getTopSymbols_Binance(n){
     const url = "https://api.binance.com/api/v3/ticker/24hr";
     const data = await fetchJson(url);
@@ -488,6 +468,7 @@
     usdt.sort((a,b)=>(+b.quoteVolume)-(+a.quoteVolume));
     return usdt.slice(0,n).map(d=>d.symbol);
   }
+
   async function getPrices_Binance(){
     const url = "https://api.binance.com/api/v3/ticker/price";
     const data = await fetchJson(url);
@@ -495,63 +476,27 @@
     for(const it of data) map.set(it.symbol, +it.price);
     return map;
   }
+
   async function getHL_Binance(sym, tf, istDate, istTime){
-    // Fast mode (auto) => 1d candle for that day
-    const {start,end} = utcWindowForIst(istDate, null);
     const ep = "https://api.binance.com/api/v3/klines";
+
+    // FAST (auto): daily candle for the IST date
     if(tf === "auto" || tf === "1d"){
+      const {start,end} = utcWindowForIst(istDate, null);
       const url = `${ep}?symbol=${sym}&interval=1d&startTime=${start}&endTime=${end}&limit=1`;
       const a = await fetchJson(url);
       if(!Array.isArray(a)||!a.length) return null;
       return {high:+a[0][2], low:+a[0][3]};
     }
+
+    // Candle containing the target time (or 00:00 if blank)
     const t = istTime || "00:00";
     const {end:targetEnd} = utcWindowForIst(istDate, t);
     const ms = intervalMsMap[tf];
     const url = `${ep}?symbol=${sym}&interval=${tf}&endTime=${targetEnd}&limit=3`;
     const arr = await fetchJson(url);
     if(!Array.isArray(arr)||!arr.length) return null;
-    let chosen=null;
-    for(const k of arr){
-      const o=k[0];
-      if(o<=targetEnd && targetEnd<o+ms){ chosen=k; break; }
-    }
-    if(!chosen) chosen = arr[arr.length-1];
-    return {high:+chosen[2], low:+chosen[3]};
-  }
 
-  async function getTopSymbols_MEXC(n){
-    // MEXC may be blocked by CORS, so we apply proxy if given
-    const raw = "https://api.mexc.com/api/v3/ticker/24hr";
-    const url = applyProxy(raw);
-    const data = await fetchJson(url);
-    const usdt = data.filter(d => (d.symbol||"").endsWith("USDT"));
-    usdt.sort((a,b)=>(+b.quoteVolume)-(+a.quoteVolume));
-    return usdt.slice(0,n).map(d=>d.symbol);
-  }
-  async function getPrices_MEXC(){
-    const raw = "https://api.mexc.com/api/v3/ticker/price";
-    const url = applyProxy(raw);
-    const data = await fetchJson(url);
-    const map = new Map();
-    for(const it of data) map.set(it.symbol, +it.price);
-    return map;
-  }
-  async function getHL_MEXC(sym, tf, istDate, istTime){
-    const rawBase = "https://api.mexc.com/api/v3/klines";
-    if(tf === "auto" || tf === "1d"){
-      const {start,end} = utcWindowForIst(istDate, null);
-      const raw = `${rawBase}?symbol=${sym}&interval=1d&startTime=${start}&endTime=${end}&limit=1`;
-      const a = await fetchJson(applyProxy(raw));
-      if(!Array.isArray(a)||!a.length) return null;
-      return {high:+a[0][2], low:+a[0][3]};
-    }
-    const t = istTime || "00:00";
-    const {end:targetEnd} = utcWindowForIst(istDate, t);
-    const ms = intervalMsMap[tf];
-    const raw = `${rawBase}?symbol=${sym}&interval=${tf}&endTime=${targetEnd}&limit=3`;
-    const arr = await fetchJson(applyProxy(raw));
-    if(!Array.isArray(arr)||!arr.length) return null;
     let chosen=null;
     for(const k of arr){
       const o=k[0];
@@ -564,7 +509,7 @@
   /******** MAIN LOAD ********/
   async function loadAll(){
     clearErr();
-    const ex = exchangeSel.value;
+
     const istDate = dateInp.value;
     const istTime = (timeInp.value || "").trim() || null;
     const tf = tfSel.value;
@@ -581,34 +526,29 @@
 
     let symbols = [];
     try{
-      if(ex === "binance") symbols = await getTopSymbols_Binance(n);
-      else symbols = await getTopSymbols_MEXC(n);
+      symbols = await getTopSymbols_Binance(n);
     } catch (e){
       console.error(e);
       setStatus("Error");
-      if(ex === "mexc"){
-        showErr(
-          "MEXC blocked by browser (CORS) OR proxy not set.\n\n" +
-          "Fix: choose Binance OR put a working proxy in Proxy box.\n" +
-          "Also open DevTools (F12) → Console to see the exact error."
-        );
-      } else {
-        showErr("Binance API error. Check console (F12).");
-      }
-      setLoadingRow("Failed to load symbols (see error above).");
+      showErr("Failed to load symbols.\n\nOpen Console (F12) for details.\n" + (e?.message || e));
+      setLoadingRow("Failed to load symbols.");
       return;
     }
 
     state.symbols = symbols;
     state.rows.clear();
     for(const s of symbols){
-      state.rows.set(s, {symbol:s, price:null, high:null, low:null, toHighPct:null,toLowPct:null,posPct:null,closeness:null,rangePct:null});
+      state.rows.set(s, {
+        symbol:s,
+        price:null, high:null, low:null,
+        toHighPct:null,toLowPct:null,posPct:null,closeness:null,rangePct:null
+      });
     }
     render();
 
     setStatus("Fetching prices...");
     try{
-      const pm = (ex === "binance") ? await getPrices_Binance() : await getPrices_MEXC();
+      const pm = await getPrices_Binance();
       for(const s of symbols){
         const r = state.rows.get(s);
         if(r) r.price = pm.get(s) ?? null;
@@ -617,7 +557,7 @@
     } catch (e){
       console.error(e);
       setStatus("Error");
-      showErr("Price fetch failed. Check console (F12).");
+      showErr("Failed to fetch prices.\n\n" + (e?.message || e));
       return;
     }
 
@@ -628,25 +568,23 @@
       await runPool(symbols, async (sym) => {
         const r = state.rows.get(sym);
         if(!r) return;
+
         let hl = null;
-        try{
-          if(ex === "binance") hl = await getHL_Binance(sym, tf, istDate, istTime);
-          else hl = await getHL_MEXC(sym, tf, istDate, istTime);
-        } catch {
-          hl = null;
-        }
+        try{ hl = await getHL_Binance(sym, tf, istDate, istTime); } catch { hl = null; }
         if(hl){
           r.high = hl.high; r.low = hl.low;
-          if(isF(r.price) && isF(r.high) && isF(r.low)) Object.assign(r, compute(r.price, r.high, r.low));
+          if(isF(r.price) && isF(r.high) && isF(r.low)){
+            Object.assign(r, compute(r.price, r.high, r.low));
+          }
         }
       }, concurrency);
+
       render();
       setStatus("Ready");
     } catch (e){
       console.error(e);
       setStatus("Error");
-      showErr("HL fetch failed. Check console (F12).");
-      return;
+      showErr("Failed while fetching High/Low.\n\n" + (e?.message || e));
     }
   }
 
@@ -688,10 +626,9 @@
   /******** INIT STORAGE ********/
   if(localStorage.getItem(ADMIN_KEY) !== "1") localStorage.setItem(ADMIN_KEY, "0");
   if(localStorage.getItem(PRO_KEY) !== "1") localStorage.setItem(PRO_KEY, "0");
-
   refreshUI();
 
-  // Default: show content immediately (no blank)
+  // Auto-load with safe defaults
   setStatus("Idle");
 })();
 </script>
