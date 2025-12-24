@@ -3,88 +3,24 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>ASB Scanner — MEXC • Target-Date Proximity • IST • MCap • RVOL • P@Target</title>
+<title>Target-Date Proximity — Live % to High/Low • IST (12-hour) • MCap • RVOL • Timeframes • P@Target • Day Close</title>
 <style>
   :root{
     --bg:#0b1220; --panel:#0f172a; --panel2:#0d1628;
     --muted:#9fb0d4; --text:#e8eefc; --border:#22304a;
     --accent:#5eead4; --ok:#9ae6b4; --warn:#ffd166; --danger:#ff6b6b;
-    --chip:#12203a; --shadow:0 10px 30px rgba(0,0,0,.25);
+    --chip:#12203a; --glow:0 0 0 rgba(94,234,212,.0),0 0 0 rgba(94,234,212,.0);
   }
   html,body{height:100%}
-  body{
-    margin:0;
-    background:radial-gradient(1200px 600px at 10% -10%,#0d1a30 0,#0b1220 40%,#0a1020 100%);
-    color:var(--text);
-    font:14px system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
-    -webkit-font-smoothing:antialiased;
-  }
+  body{margin:0;background:radial-gradient(1200px 600px at 10% -10%,#0d1a30 0,#0b1220 40%,#0a1020 100%);color:var(--text);font:14px system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased}
   *{box-sizing:border-box}
   .wrap{max-width:1320px;margin:22px auto;padding:0 14px}
-
-  /* Topbar */
-  .topbar{
-    position:sticky; top:12px; z-index:9;
-    display:flex; gap:10px; align-items:center; justify-content:space-between; flex-wrap:wrap;
-    background:rgba(15,23,42,.72);
-    border:1px solid var(--border);
-    border-radius:18px;
-    padding:10px 12px;
-    box-shadow:var(--shadow);
-    backdrop-filter: blur(10px);
-    margin-bottom:12px;
-  }
-  .brand{display:flex;gap:10px;align-items:center}
-  .logo{
-    width:38px;height:38px;border-radius:14px;
-    background:linear-gradient(135deg, rgba(94,234,212,.95), rgba(96,165,250,.85));
-    box-shadow:0 0 0 3px rgba(94,234,212,.08);
-  }
-  .brand h1{margin:0;font-size:14px;letter-spacing:.2px}
-  .brand .sub{margin:0;color:var(--muted);font-size:12px}
-  .top-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
-  .btn2{
-    background:#0c1426;color:var(--text);
-    border:1px solid var(--border);
-    border-radius:12px;
-    padding:8px 10px; min-height:36px;
-    cursor:pointer; user-select:none;
-    transition:border-color .15s ease, transform .05s ease;
-    text-decoration:none; display:inline-flex; align-items:center; justify-content:center;
-  }
-  .btn2:hover{transform:translateY(-1px);border-color:rgba(94,234,212,.55)}
-  .btn2:active{transform:translateY(0)}
-  .btn2.primary{border-color:rgba(94,234,212,.55); background:rgba(94,234,212,.10)}
-  .btn2.blue{border-color:rgba(96,165,250,.55); background:rgba(96,165,250,.10)}
-  .btn2.danger{border-color:rgba(239,68,68,.55); background:rgba(239,68,68,.10)}
-  .btn2.warn{border-color:rgba(245,158,11,.55); background:rgba(245,158,11,.10)}
-  .pill2{
-    padding:6px 10px;border-radius:999px;border:1px solid var(--border);
-    font-size:12px;background:var(--chip);color:var(--muted);display:inline-flex;align-items:center;gap:8px;
-  }
-  .pill2.on{border-color:rgba(34,197,94,.55);background:rgba(34,197,94,.10);color:rgba(167,243,208,.95)}
-  .pill2.off{border-color:rgba(239,68,68,.55);background:rgba(239,68,68,.10);color:rgba(254,202,202,.95)}
-  .pill2.admin{border-color:rgba(96,165,250,.65);background:rgba(96,165,250,.12);color:#dbeafe}
-
-  /* Main panel */
-  .panel{
-    background:linear-gradient(180deg,var(--panel),var(--panel2));
-    border:1px solid var(--border);
-    border-radius:18px;
-    padding:12px 14px;
-    box-shadow:var(--shadow);
-  }
+  .panel{background:linear-gradient(180deg,var(--panel),var(--panel2));border:1px solid var(--border);border-radius:18px;padding:12px 14px;box-shadow:0 10px 30px rgba(0,0,0,.25)}
   .row{display:flex;flex-wrap:wrap;gap:10px;align-items:end}
   .col{display:flex;flex-direction:column;gap:6px;min-width:160px}
   h2{font-weight:700;letter-spacing:.2px;margin:0}
   label{font-size:12px;color:var(--muted)}
-  input,select,button{
-    background:#0c1426;color:var(--text);
-    border:1px solid var(--border);
-    border-radius:12px;
-    padding:8px 10px;min-height:36px;outline:none;
-    transition:border-color .15s ease, transform .05s ease;
-  }
+  input,select,button{background:#0c1426;color:var(--text);border:1px solid var(--border);border-radius:12px;padding:8px 10px;min-height:36px;outline:none;transition:border-color .15s ease, transform .05s ease}
   input:focus,select:focus{border-color:#355080;box-shadow:0 0 0 3px rgba(53,80,128,.22)}
   button{cursor:pointer;user-select:none}
   .btn{background:linear-gradient(90deg,#1b2a44,#17354a);border-color:#2b3b5a;box-shadow:0 6px 16px rgba(0,0,0,.25)}
@@ -93,52 +29,28 @@
   .note{color:var(--muted);font-size:12px}
   .stats{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
   .stat{padding:6px 10px;border-radius:999px;border:1px solid var(--border);font-size:12px;background:#0c1426}
-
-  /* Table */
   .grid{margin-top:12px;border:1px solid var(--border);border-radius:18px;overflow:auto;height:54vh}
   table{width:100%;border-collapse:separate;border-spacing:0}
-  thead th{
-    position:sticky;top:0;
-    background:linear-gradient(180deg,#111b2e,#0f172a);
-    border-bottom:1px solid var(--border);
-    z-index:2;font-weight:700;color:#cbd5f1;
-    backdrop-filter:blur(4px)
-  }
+  thead th{position:sticky;top:0;background:linear-gradient(180deg,#111b2e,#0f172a);border-bottom:1px solid var(--border);z-index:2;font-weight:700;color:#cbd5f1;backdrop-filter:blur(4px)}
   th,td{padding:10px;text-align:right;white-space:nowrap}
   th:first-child,td:first-child{text-align:left}
   tbody tr:nth-child(odd){background:#0c1426}
   tbody tr:hover{background:#0e1830}
   thead th[data-k]{cursor:pointer;user-select:none;position:relative}
-  thead th[data-k]::after{
-    content:"";position:absolute;right:8px;top:50%;
-    width:8px;height:8px;border-right:2px solid #6aa7a0;border-bottom:2px solid #6aa7a0;
-    opacity:.35;transform:translateY(-50%) rotate(-45deg)
-  }
+  thead th[data-k]::after{content:"";position:absolute;right:8px;top:50%;width:8px;height:8px;border-right:2px solid #6aa7a0;border-bottom:2px solid #6aa7a0;opacity:.35;transform:translateY(-50%) rotate(-45deg)}
   thead th.sort-asc::after{opacity:.9;transform:translateY(-50%) rotate(-135deg)}
   thead th.sort-desc::after{opacity:.9;transform:translateY(-50%) rotate(45deg)}
-
   .bar{width:120px;height:8px;border-radius:999px;background:#0c1426;border:1px solid var(--border);position:relative;display:inline-block;overflow:hidden}
   .bar>i{position:absolute;top:-3px;width:2px;height:14px;background:#6dd6c8;border-radius:1px}
-  .bar .lo{left:0}.bar .hi{right:0}.bar .p{background:var(--ok)}
+  .bar .lo{left:0}.bar .hi{right:0}.bar .p{background:var(--ok);box-shadow:var(--glow)}
   @keyframes ping{0%{box-shadow:0 0 0 0 rgba(154,230,180,.35)}100%{box-shadow:0 0 0 10px rgba(154,230,180,0)}}
   .ping{animation:ping .9s cubic-bezier(.2,.7,.2,1) 1}
-
   .recs{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}
-  .card{
-    background:linear-gradient(180deg,var(--panel),var(--panel2));
-    border:1px solid var(--border);
-    border-radius:16px;
-    padding:10px;min-height:160px;position:relative;overflow:hidden
-  }
-  .card:before{
-    content:"";position:absolute;inset:-40% -40% auto auto;width:120%;height:120%;
-    background:radial-gradient(300px 120px at right -40px top -40px, rgba(94,234,212,.07), transparent 60%);
-    pointer-events:none
-  }
+  .card{background:linear-gradient(180deg,var(--panel),var(--panel2));border:1px solid var(--border);border-radius:16px;padding:10px;min-height:160px;position:relative;overflow:hidden}
+  .card:before{content:"";position:absolute;inset:-40% -40% auto auto;width:120%;height:120%;background:radial-gradient(300px 120px at right -40px top -40px, rgba(94,234,212,.07), transparent 60%);pointer-events:none}
   .rec-list{max-height:22vh;overflow:auto}
   .rec-item{display:flex;justify-content:space-between;border-bottom:1px dashed #22304a;padding:8px 0;gap:8px}
   .rec-item:last-child{border-bottom:none}
-
   .skel{background:linear-gradient(90deg,#0f172a 25%,#13203a 37%,#0f172a 63%);background-size:400% 100%;animation:shimmer 1.2s ease-in-out infinite}
   @keyframes shimmer{0%{background-position:100% 0}100%{background-position:-100% 0}}
 
@@ -146,77 +58,11 @@
   .pill.bear{background:rgba(61,16,16,.55);border-color:#6b2b2b;color:#ff7b7b}
   .pill.doji{background:rgba(61,49,16,.55);border-color:#6b5a2b;color:#ffd166}
 
-  .trade-btn{
-    display:inline-flex;align-items:center;justify-content:center;
-    padding:7px 10px;border-radius:12px;
-    border:1px solid rgba(94,234,212,.55);
-    background:rgba(94,234,212,.10);
-    color:var(--text); text-decoration:none; font-size:12px;
-  }
-  .trade-btn:hover{border-color:rgba(94,234,212,.85); background:rgba(94,234,212,.16)}
-
-  /* Modal */
-  .modal-backdrop{
-    position:fixed; inset:0;
-    background: rgba(0,0,0,.55);
-    display:none; align-items:center; justify-content:center;
-    padding:20px; z-index: 999;
-  }
-  .modal{
-    width:min(860px, 100%);
-    background: rgba(11,18,32,.98);
-    border:1px solid var(--border);
-    border-radius: 18px;
-    box-shadow: var(--shadow);
-    padding:16px;
-  }
-  .modal header{display:flex; align-items:center; justify-content:space-between; gap:12px}
-  .modal h4{margin:0; font-size:16px}
-  .modal .content{margin-top:12px; color:var(--muted); font-size:13px; line-height:1.55}
-  .pricing{display:grid; grid-template-columns: repeat(3,1fr); gap:10px; margin-top:12px}
-  .price-card{border:1px solid var(--border); border-radius:16px; padding:14px; background: rgba(15,23,42,.55)}
-  .price{font-size:20px; color:var(--text); margin-top:6px}
-  .ul{margin:10px 0 0; padding-left:18px}
-  .ul li{margin:6px 0}
-  .divider{height:1px; background: rgba(34,48,74,.7); margin:12px 0}
-
-  @media (max-width: 980px){
-    .recs{grid-template-columns:1fr}
-    .grid{height:56vh}
-    .pricing{grid-template-columns:1fr}
-  }
+  @media (max-width: 980px){.recs{grid-template-columns:1fr}.grid{height:56vh}}
 </style>
 </head>
 <body>
-
 <div class="wrap">
-
-  <!-- TOPBAR -->
-  <div class="topbar">
-    <div class="brand">
-      <div class="logo"></div>
-      <div>
-        <h1>ASB Scanner</h1>
-        <p class="sub">MEXC default trade • Pro unlock • Admin (your device)</p>
-      </div>
-    </div>
-    <div class="top-actions">
-      <span id="proBadge" class="pill2 off">Pro: Locked 🔒</span>
-      <span id="adminBadge" class="pill2 admin" style="display:none;">Admin ✅</span>
-
-      <button id="btnShare" class="btn2" data-sound="click">Share</button>
-      <a id="btnJoinMexc" class="btn2 primary" href="#" target="_blank" rel="noopener noreferrer">Join MEXC</a>
-
-      <button id="btnPro" class="btn2 blue" data-sound="click">Go Pro</button>
-      <button id="btnUnlock" class="btn2 primary" data-sound="click">Unlock</button>
-      <button id="btnLock" class="btn2 danger" data-sound="click">Lock</button>
-
-      <button id="btnAdmin" class="btn2 warn" data-sound="click">Admin</button>
-      <button id="btnAdminOff" class="btn2 danger" data-sound="click">Admin Off</button>
-    </div>
-  </div>
-
-  <!-- MAIN PANEL -->
   <div class="panel">
     <div class="row" style="align-items:center;justify-content:space-between">
       <h2>Target-Date Proximity <span class="note">— live % to Timeframe High/Low + P@Target (IST, 12-hour) + Day Close Dir</span></h2>
@@ -234,8 +80,7 @@
           <option value="1h">1h</option><option value="2h">2h</option>
           <option value="4h">4h</option><option value="6h">6h</option>
           <option value="8h">8h</option><option value="12h">12h</option>
-          <option value="1d">1d</option><option value="3d">3d</option>
-          <option value="1w">1w</option>
+          <option value="1d">1d</option><option value="3d">3d</option><option value="1w">1w</option>
         </select>
       </div>
       <div class="col">
@@ -248,16 +93,15 @@
       <div class="col" style="min-width:260px">
         <label>Exchanges</label>
         <div class="row" style="gap:8px;align-items:center">
-          <!-- Default: MEXC checked -->
-          <label class="pill"><input type="checkbox" class="exch" value="mexc" checked style="accent-color:#4fd1c5" data-sound="tick"> MEXC (spot)</label>
-          <label class="pill"><input type="checkbox" class="exch" value="binance" style="accent-color:#4fd1c5" data-sound="tick"> Binance</label>
+          <label class="pill"><input type="checkbox" class="exch" value="binance" checked style="accent-color:#4fd1c5" data-sound="tick"> Binance</label>
+          <label class="pill"><input type="checkbox" class="exch" value="mexc" style="accent-color:#4fd1c5" data-sound="tick"> MEXC (spot)</label>
         </div>
       </div>
       <div class="col"><label>Top N / exchange</label>
-        <select id="topn" data-sound="click"><option>20</option><option>60</option><option>100</option><option>200</option><option selected>300</option><option>500</option></select>
+        <select id="topn" data-sound="click"><option>20</option><option>60</option><option>100</option><option>200</option><option>300</option><option selected>500</option></select>
       </div>
       <div class="col"><label> </label><button id="loadTop" class="btn" data-sound="click">Load Top</button></div>
-      <div class="col" style="flex:1;min-width:240px"><label>Quick search</label><input id="search" placeholder="Filter (e.g., BTC, ETH, MEXC)…"></div>
+      <div class="col" style="flex:1;min-width:240px"><label>Quick search</label><input id="search" placeholder="Filter (e.g., BTC, ETH, Binance)…"></div>
     </div>
 
     <div class="row" style="margin-top:6px">
@@ -302,11 +146,12 @@
     </div>
 
     <p class="note" style="margin-top:6px">
+      <b>How it works:</b> The timeframe you choose (e.g., <b>1h</b>) picks the single candle that contains your Target Time (IST) on that date and shows that candle’s <b>High/Low</b> and range. “P@Target” is the exact <b>1-minute</b> price at your time. “Day Close” reads the <b>daily</b> (1d) candle for your Target Date and marks
+      <span class="pill bull">Bullish</span>, <span class="pill bear">Bearish</span>, or <span class="pill doji">Doji</span> by comparing Close vs Open.<br>
       % to High = ((High − Price)/High)×100 • % to Low = ((Price − Low)/Low)×100 • <b>Closeness %</b> = min(% to High, % to Low). • <b>% to P@Target</b> = |Price − P@Target| ÷ P@Target × 100.
     </p>
   </div>
 
-  <!-- TABLE -->
   <div class="grid">
     <table id="tbl" aria-live="polite">
       <thead>
@@ -331,222 +176,33 @@
           <th data-k="mcap">M.Cap (USD)</th>
           <th data-k="date">Candle (IST)</th>
           <th data-k="daydir">Day Close</th>
-          <th>Trade (MEXC)</th>
         </tr>
       </thead>
       <tbody id="tbody">
-        <tr class="skel"><td colspan="21" style="height:120px"></td></tr>
+        <tr class="skel"><td colspan="20" style="height:120px"></td></tr>
       </tbody>
     </table>
   </div>
 
-  <!-- RADARS -->
   <div class="recs">
     <div class="card"><h3 style="margin:0 0 6px">Breakout radar — Near High</h3><div id="recHigh" class="rec-list"></div></div>
     <div class="card"><h3 style="margin:0 0 6px">Mean-revert radar — Near Low</h3><div id="recLow" class="rec-list"></div></div>
     <div class="card"><h3 style="margin:0 0 6px">Recent Touches (≤ lookback, IST)</h3><div id="recTouch" class="rec-list"></div></div>
   </div>
 
-  <p class="note" style="margin-top:10px">
-    MEXC spot runs via REST polling. Binance uses WebSocket (if enabled). Market-cap uses CoinGecko (best-effort symbol match).
-  </p>
-
-</div>
-
-<!-- MODAL -->
-<div class="modal-backdrop" id="modalBackdrop">
-  <div class="modal">
-    <header>
-      <h4 id="modalTitle">Modal</h4>
-      <button class="btn2" id="modalClose" data-sound="click">Close</button>
-    </header>
-    <div class="content" id="modalBody"></div>
-  </div>
+  <p class="note" style="margin-top:10px">Binance: WebSocket live. MEXC Spot: REST polling. M.Cap: CoinGecko best-effort symbol match. All times shown in IST (12-hour).</p>
 </div>
 
 <script>
 (function(){
-  /************************************************************
-   * CONFIG (EDIT THESE)
-   ************************************************************/
-  const CONFIG = {
-    // ✅ YOUR MEXC REFERRAL LINK:
-    MEXC_REF: "https://promote.mexc.co/r/5S4fzXCz",
-
-    // Put your Razorpay / Stripe payment link here:
-    PRO_PAYMENT_LINK: "https://razorpay.com/",
-
-    // Users can unlock with these codes (change anytime):
-    PRO_CODES: ["ASBPRO2025","ASBVIP","ASBTRADER"],
-
-    // Admin PIN for YOU (device-only). Anyone can view page-source, so this is NOT secure.
-    // For real security, you need a backend login.
-    ADMIN_PIN: "AMIR-ADMIN-1234",
-
-    // Gate features behind Pro (admin always has them):
-    PRO_GATES: { RVOL:true, MCAP:true, PTARGET:true, RECENT_TOUCHES:false }
-  };
-
-  /************************************************************
-   * Pro/Admin (device-only)
-   ************************************************************/
-  let proUnlocked = (localStorage.getItem("asb_pro") === "1");
-  let isAdmin = (localStorage.getItem("asb_admin") === "1");
-  const proBadge = document.getElementById("proBadge");
-  const adminBadge = document.getElementById("adminBadge");
-
-  function hasPro(){ return proUnlocked || isAdmin; }
-
-  function setBadges(){
-    if(isAdmin){
-      adminBadge.style.display="inline-flex";
-      proBadge.classList.remove("off"); proBadge.classList.add("on");
-      proBadge.textContent="Pro: Unlocked ✅";
-      return;
-    }
-    adminBadge.style.display="none";
-    if(proUnlocked){
-      proBadge.classList.remove("off"); proBadge.classList.add("on");
-      proBadge.textContent="Pro: Unlocked ✅";
-    }else{
-      proBadge.classList.remove("on"); proBadge.classList.add("off");
-      proBadge.textContent="Pro: Locked 🔒";
-    }
-  }
-
-  function openModal(title, html){
-    document.getElementById("modalTitle").textContent = title;
-    document.getElementById("modalBody").innerHTML = html;
-    document.getElementById("modalBackdrop").style.display = "flex";
-  }
-  function closeModal(){ document.getElementById("modalBackdrop").style.display = "none"; }
-
-  function openProModal(extraMsg=""){
-    openModal("ASB Pro", `
-      ${extraMsg ? `<div class="pill" style="border-color:rgba(245,158,11,.55);background:rgba(245,158,11,.10);color:#ffd166;margin-bottom:10px;">${extraMsg}</div>` : ""}
-      <p><b>Go Pro</b> to unlock premium features (RVOL / Market Cap / P@Target).</p>
-
-      <div class="pricing">
-        <div class="price-card">
-          <div class="note">Starter</div>
-          <div class="price">₹499 / month</div>
-          <ul class="ul"><li>RVOL tools</li><li>Market-cap filter</li><li>Priority updates</li></ul>
-        </div>
-        <div class="price-card">
-          <div class="note">Pro</div>
-          <div class="price">₹999 / month</div>
-          <ul class="ul"><li>All Starter</li><li>P@Target tools</li><li>Faster workflow</li></ul>
-        </div>
-        <div class="price-card">
-          <div class="note">VIP</div>
-          <div class="price">₹1999 / month</div>
-          <ul class="ul"><li>All Pro</li><li>Alerts (Telegram/WhatsApp)</li><li>Daily top setups</li></ul>
-        </div>
-      </div>
-
-      <div class="divider"></div>
-
-      <div style="display:flex;gap:10px;flex-wrap:wrap">
-        <a class="btn2 blue" href="${CONFIG.PRO_PAYMENT_LINK}" target="_blank" rel="noopener noreferrer">Pay & Get Pro</a>
-        <button class="btn2 primary" id="modalUnlockBtn">I already have a code</button>
-      </div>
-
-      <p class="note" style="margin-top:10px">
-        Admin is stored on <b>your device</b>. For real “user accounts”, you need a backend.
-      </p>
-    `);
-    setTimeout(()=>{
-      const b=document.getElementById("modalUnlockBtn");
-      if(b) b.onclick = ()=>unlockPro();
-    },0);
-  }
-
-  function unlockPro(){
-    const code = prompt("Enter Pro Access Code:");
-    if(!code) return;
-    if(CONFIG.PRO_CODES.includes(code.trim())){
-      proUnlocked=true;
-      localStorage.setItem("asb_pro","1");
-      setBadges();
-      alert("Pro unlocked ✅");
-      closeModal();
-    }else alert("Invalid code.");
-  }
-  function lockPro(){
-    proUnlocked=false;
-    localStorage.removeItem("asb_pro");
-    setBadges();
-  }
-  function adminOn(){
-    const pin = prompt("Enter Admin PIN (device-only):");
-    if(!pin) return;
-    if(pin.trim() === CONFIG.ADMIN_PIN){
-      isAdmin=true;
-      localStorage.setItem("asb_admin","1");
-      setBadges();
-      alert("Admin enabled ✅ (this device)");
-    } else alert("Wrong PIN.");
-  }
-  function adminOff(){
-    isAdmin=false;
-    localStorage.removeItem("asb_admin");
-    setBadges();
-    alert("Admin disabled.");
-  }
-
-  // topbar buttons
-  document.getElementById("btnJoinMexc").href = CONFIG.MEXC_REF;
-  document.getElementById("modalClose").addEventListener("click", closeModal);
-  document.getElementById("modalBackdrop").addEventListener("click", (e)=>{ if(e.target.id==="modalBackdrop") closeModal(); });
-  document.getElementById("btnPro").addEventListener("click", ()=>openProModal());
-  document.getElementById("btnUnlock").addEventListener("click", unlockPro);
-  document.getElementById("btnLock").addEventListener("click", lockPro);
-  document.getElementById("btnAdmin").addEventListener("click", adminOn);
-  document.getElementById("btnAdminOff").addEventListener("click", adminOff);
-
-  async function shareSite(){
-    const url = location.href;
-    try{
-      if(navigator.share) await navigator.share({title: document.title, text: "ASB Scanner", url});
-      else { await navigator.clipboard.writeText(url); alert("Link copied: " + url); }
-    }catch{
-      try{ await navigator.clipboard.writeText(url); }catch{}
-    }
-  }
-  document.getElementById("btnShare").addEventListener("click", shareSite);
-
-  setBadges();
-
-  /************************************************************
-   * Sound (small)
-   ************************************************************/
-  let audioCtx=null;
-  const prefersReduced=matchMedia('(prefers-repanic'); // fallback safe? no
-})();
-</script>
-
-<script>
-(function(){
-  // ---- sound (safe) ----
-  let audioCtx=null;
-  const prefersReduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  function beep({freq=520,dur=70,type='triangle',vol=0.08}={}){
-    try{ audioCtx ||= new (window.AudioContext||window.webkitAudioContext)(); }catch(_){ return; }
-    const t=audioCtx.currentTime, o=audioCtx.createOscillator(), g=audioCtx.createGain();
-    o.type=type; o.frequency.value=freq;
-    g.gain.setValueAtTime(0.0001,t);
-    g.gain.linearRampToValueAtTime(vol,t+.01);
-    g.gain.exponentialRampToValueAtTime(0.0001,t+dur/1e3);
-    o.connect(g).connect(audioCtx.destination);
-    o.start(t); o.stop(t+dur/1e3);
-  }
-  const play={click:()=>beep(), sort:()=>beep({freq:640,dur:60,type:'sine'}), done:()=>{beep({freq:660});setTimeout(()=>beep({freq:990}),60)}};
-  document.addEventListener("click",(e)=>{
-    const el = e.target.closest("[data-sound]");
-    if(!el || prefersReduced) return;
-    const k = el.getAttribute("data-sound");
-    if(play[k]) play[k]();
-  }, true);
+  // --- sound (simple) ---
+  let audioCtx=null; const prefersReduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function beep({freq=520,dur=70,type='triangle',vol=0.08}={}){ try{ audioCtx ||= new (window.AudioContext||window.webkitAudioContext)(); }catch(_){return}
+    const t=audioCtx.currentTime,o=audioCtx.createOscillator(),g=audioCtx.createGain();o.type=type;o.frequency.value=freq;
+    g.gain.setValueAtTime(0.0001,t);g.gain.linearRampToValueAtTime(vol,t+.01);g.gain.exponentialRampToValueAtTime(0.0001,t+dur/1e3);
+    o.connect(g).connect(audioCtx.destination);o.start(t);o.stop(t+dur/1e3)}
+  const play={click:()=>beep(),sort:()=>beep({freq:640,dur:60,type:'sine'}),done:()=>{beep({freq:660});setTimeout(()=>beep({freq:990}),60)}};
+  new MutationObserver(()=>document.querySelectorAll('[data-sound]').forEach(el=>el.onclick=()=>{if(!prefersReduced)play[el.dataset.sound]?.()})).observe(document.documentElement,{subtree:true,childList:true});
 
   // --- DOM refs ---
   const $=q=>document.querySelector(q), $$=q=>Array.from(document.querySelectorAll(q));
@@ -554,10 +210,6 @@
   const mcKnown=$("#mcKnown"), recHigh=$("#recHigh"), recLow=$("#recLow"), recTouch=$("#recTouch");
   const rvKnown=$("#rvKnown"), ptKnown=$("#ptKnown");
 
-  // Config from first script (already declared in global scope)
-  const CONFIG = window.CONFIG || null; // (not used here directly)
-
-  // Formatters
   const NF=new Intl.NumberFormat(undefined,{maximumFractionDigits:2});
   const NF3=new Intl.NumberFormat(undefined,{maximumFractionDigits:3});
   const NFi0=new Intl.NumberFormat(undefined,{maximumFractionDigits:0});
@@ -566,12 +218,24 @@
   const fmtPct=x=> isF(x)? NF3.format(x)+"%":"—";
   const fmtInt=x=> isF(x)? NFi0.format(x):"—";
 
-  // TIME FIX (IST)
-  const IST_OFFSET_MS = 5.5 * 3600e3;
+  // =========================================================
+  // TIME FIX (IST correctness + 12-hour display)
+  // - Treat the Date input as an IST calendar day.
+  // - Convert IST date/time -> UTC ms for exchange APIs.
+  // - Display with Intl.DateTimeFormat timeZone Asia/Kolkata (hour12:true).
+  // =========================================================
+  const IST_OFFSET_MS = 5.5 * 3600e3; // fixed (no DST)
   const IST_TZ = "Asia/Kolkata";
-  const IST_DATE_FMT = new Intl.DateTimeFormat("en-CA", { timeZone: IST_TZ, year:"numeric", month:"2-digit", day:"2-digit" });
+
+  const IST_DATE_FMT = new Intl.DateTimeFormat("en-CA", { // YYYY-MM-DD
+    timeZone: IST_TZ, year:"numeric", month:"2-digit", day:"2-digit"
+  });
+
   const IST_DT_FMT_12H = new Intl.DateTimeFormat("en-US", {
-    timeZone: IST_TZ, year:"numeric", month:"2-digit", day:"2-digit", hour:"numeric", minute:"2-digit", hour12:true
+    timeZone: IST_TZ,
+    year:"numeric", month:"2-digit", day:"2-digit",
+    hour:"numeric", minute:"2-digit",
+    hour12:true
   });
 
   function parseYMD(dateStr){
@@ -608,28 +272,33 @@
   }
   function istDateLabelFromMs(ms){
     if(!isF(ms)) return "—";
-    return IST_DATE_FMT.format(new Date(ms));
+    return IST_DATE_FMT.format(new Date(ms)); // YYYY-MM-DD in IST
   }
+
   function utcWindowForIst(istDateStr, istTimeStr){
     const start = istDayStartUtcMs(istDateStr);
     const last  = start + 24*3600e3 - 1;
-    if(!istTimeStr) return { start, end:last };
+    if(!istTimeStr){
+      return { start, end:last, endISO:new Date(last).toISOString() };
+    }
     let end = istDateTimeToUtcMs(istDateStr, istTimeStr);
     if(!isF(end)) end = last;
     if(end < start) end = start;
     if(end > last) end = last;
-    return { start, end };
+    return { start, end, endISO:new Date(end).toISOString() };
   }
+
   function timeLabelISTForWindow(istDateStr, istTimeStr){
     if(istTimeStr){
       const end = istDateTimeToUtcMs(istDateStr, istTimeStr);
-      return `${istDateStr} ${toIST12(end).split(" ").slice(1).join(" ")}`;
+      return `${istDateStr} ${toIST12(end).split(" ").slice(1).join(" ")}`; // uses 12h
     }
     const end = istDayStartUtcMs(istDateStr) + 24*3600e3 - 1;
     return `${istDateStr} ${toIST12(end).split(" ").slice(1).join(" ")}`;
   }
 
   const intervalMsMap={"1m":60e3,"3m":180e3,"5m":300e3,"15m":900e3,"30m":1800e3,"1h":3600e3,"2h":7200e3,"4h":14400e3,"6h":21600e3,"8h":28800e3,"12h":43200e3,"1d":86400e3,"3d":259200e3,"1w":604800e3};
+
   function candleIstLabel(openMs, interval){
     if(!isF(openMs)) return "—";
     const ms = intervalMsMap[interval] || 0;
@@ -638,7 +307,7 @@
     return `${interval} • ${a} → ${b}`;
   }
 
-  // helpers
+  // --- calc helpers ---
   function compute(price,high,low){
     const r={toHighPct:null,toLowPct:null,posPct:null,closer:"—",closeness:null,rangePct:null};
     if(!(isF(price)&&isF(high)&&isF(low))) return r;
@@ -653,90 +322,12 @@
   const proxBar=posPct=>{
     if(!isF(posPct)) return "";
     const clamped = Math.max(0, Math.min(100, posPct));
-    const px = (clamped/100)*118;
+    const px = (clamped/100)*118; // bar width 120, keep inside
     return `<span class="bar"><i class="lo"></i><i class="hi"></i><i class="p" style="left:${px}px"></i></span>`;
   };
 
-  // Always Trade on MEXC (pair page)
-  function tradeUrl(symbol){
-    return `https://www.mexc.com/exchange/${encodeURIComponent(symbol)}`;
-  }
-
-  // Adapters
+  // --- Adapters (Binance + MEXC) ---
   const Adapters={
-    mexc:{
-      key:"mexc",name:"MEXC",
-      base:()=> "https://api.mexc.com",
-      async topSymbols(m,n){
-        if(m==="perp") return [];
-        const r=await fetch(this.base()+"/api/v3/ticker/24hr");
-        const data=await r.json();
-        const usdt=data.filter(d=>d.symbol.endsWith("USDT"));
-        usdt.sort((a,b)=>(+b.quoteVolume)-(+a.quoteVolume));
-        return usdt.slice(0,n).map(d=>d.symbol);
-      },
-      async klineHL_candleAt(m,sym,interval,istDateStr,istTimeStr){
-        if(m==="perp") return null;
-        const {end}=utcWindowForIst(istDateStr,istTimeStr);
-        const ms=intervalMsMap[interval]; if(!ms) return null;
-        const r=await fetch(`${this.base()}/api/v3/klines?symbol=${sym}&interval=${interval}&endTime=${end}&limit=3`);
-        if(!r.ok) return null;
-        const arr=await r.json(); if(!arr.length) return null;
-        let chosen=null;
-        for(const k of arr){const o=k[0]; if(o<=end && end<o+ms){chosen=k;break}}
-        if(!chosen) chosen=arr[arr.length-1];
-        return chosen?{high:+chosen[2],low:+chosen[3],open:+chosen[0]}:null;
-      },
-      async klineDayOHLC(m,sym,istDateStr){
-        if(m==="perp") return null;
-        const {start,end}=utcWindowForIst(istDateStr,null);
-        const r=await fetch(`${this.base()}/api/v3/klines?symbol=${sym}&interval=1d&startTime=${start}&endTime=${end}&limit=1`);
-        if(!r.ok) return null;
-        const a=await r.json(); if(!a.length) return null;
-        return {open:+a[0][1],high:+a[0][2],low:+a[0][3],close:+a[0][4],openTs:+a[0][0]};
-      },
-      async klineHL_window(m,sym,istDateStr,istTimeStr){
-        if(m==="perp") return null;
-        const {start,end}=utcWindowForIst(istDateStr,istTimeStr);
-        const interval=((end-start)/60000)<=999?"1m":"5m";
-        const r=await fetch(`${this.base()}/api/v3/klines?symbol=${sym}&interval=${interval}&startTime=${start}&endTime=${end}&limit=1000`);
-        if(!r.ok) return null;
-        const arr=await r.json(); if(!arr.length) return null;
-        let hi=-Infinity,lo=Infinity;
-        for(const k of arr){const h=+k[2],l=+k[3]; if(h>hi)hi=h; if(l<lo)lo=l}
-        return {high:hi,low:lo};
-      },
-      async priceAtTarget(m,sym,istDateStr,istTimeStr){
-        if(m==="perp") return null;
-        const end=istDateTimeToUtcMs(istDateStr,istTimeStr);
-        const minuteOpen=Math.floor(end/60000)*60000;
-        const r=await fetch(`${this.base()}/api/v3/klines?symbol=${sym}&interval=1m&startTime=${minuteOpen}&endTime=${minuteOpen+60000}&limit=1`);
-        if(!r.ok) return null;
-        const a=await r.json(); if(!a.length) return null;
-        return +a[0][4];
-      },
-      async batchPrices(m,syms){
-        if(m==="perp") return new Map();
-        const r=await fetch(this.base()+"/api/v3/ticker/price");
-        if(!r.ok) return new Map();
-        const all=await r.json();
-        const set=new Set(syms),map=new Map();
-        for(const it of all){ if(set.has(it.symbol)) map.set(it.symbol,+it.price) }
-        return map;
-      },
-      async batch24hStats(m,syms){
-        if(m==="perp") return new Map();
-        const r=await fetch(this.base()+"/api/v3/ticker/24hr");
-        if(!r.ok) return new Map();
-        const data=await r.json();
-        const set=new Set(syms),map=new Map();
-        for(const d of data){ if(set.has(d.symbol)) map.set(d.symbol,{qvol:+d.quoteVolume||0}) }
-        return map;
-      },
-      connectWS(){ return []; }
-    },
-
-    // optional: Binance if you tick it
     binance:{
       key:"binance",name:"Binance",
       base:(m)=>m==="perp"?"https://fapi.binance.com":"https://api.binance.com",
@@ -818,23 +409,94 @@
           return ws;
         });
       }
+    },
+    mexc:{
+      key:"mexc",name:"MEXC",
+      base:()=> "https://api.mexc.com",
+      async topSymbols(m,n){
+        if(m==="perp") return [];
+        const r=await fetch(this.base()+"/api/v3/ticker/24hr");
+        const data=await r.json();
+        const usdt=data.filter(d=>d.symbol.endsWith("USDT"));
+        usdt.sort((a,b)=>(+b.quoteVolume)-(+a.quoteVolume));
+        return usdt.slice(0,n).map(d=>d.symbol);
+      },
+      async klineHL_candleAt(m,sym,interval,istDateStr,istTimeStr){
+        if(m==="perp") return null;
+        const {end}=utcWindowForIst(istDateStr,istTimeStr);
+        const ms=intervalMsMap[interval]; if(!ms) return null;
+        const r=await fetch(`${this.base()}/api/v3/klines?symbol=${sym}&interval=${interval}&endTime=${end}&limit=3`);
+        if(!r.ok) return null;
+        const arr=await r.json(); if(!arr.length) return null;
+        let chosen=null;
+        for(const k of arr){const o=k[0]; if(o<=end && end<o+ms){chosen=k;break}}
+        if(!chosen) chosen=arr[arr.length-1];
+        return chosen?{high:+chosen[2],low:+chosen[3],open:+chosen[0]}:null;
+      },
+      async klineDayOHLC(m,sym,istDateStr){
+        if(m==="perp") return null;
+        const {start,end}=utcWindowForIst(istDateStr,null);
+        const r=await fetch(`${this.base()}/api/v3/klines?symbol=${sym}&interval=1d&startTime=${start}&endTime=${end}&limit=1`);
+        if(!r.ok) return null;
+        const a=await r.json(); if(!a.length) return null;
+        return {open:+a[0][1],high:+a[0][2],low:+a[0][3],close:+a[0][4],openTs:+a[0][0]};
+      },
+      async klineHL_window(m,sym,istDateStr,istTimeStr){
+        if(m==="perp") return null;
+        const {start,end}=utcWindowForIst(istDateStr,istTimeStr);
+        const interval=((end-start)/60000)<=999?"1m":"5m";
+        const r=await fetch(`${this.base()}/api/v3/klines?symbol=${sym}&interval=${interval}&startTime=${start}&endTime=${end}&limit=1000`);
+        if(!r.ok) return null;
+        const arr=await r.json(); if(!arr.length) return null;
+        let hi=-Infinity,lo=Infinity;
+        for(const k of arr){const h=+k[2],l=+k[3]; if(h>hi)hi=h; if(l<lo)lo=l}
+        return {high:hi,low:lo};
+      },
+      async priceAtTarget(m,sym,istDateStr,istTimeStr){
+        if(m==="perp") return null;
+        const end=istDateTimeToUtcMs(istDateStr,istTimeStr);
+        const minuteOpen=Math.floor(end/60000)*60000;
+        const r=await fetch(`${this.base()}/api/v3/klines?symbol=${sym}&interval=1m&startTime=${minuteOpen}&endTime=${minuteOpen+60000}&limit=1`);
+        if(!r.ok) return null;
+        const a=await r.json(); if(!a.length) return null;
+        return +a[0][4];
+      },
+      async batchPrices(m,syms){
+        if(m==="perp") return new Map();
+        const r=await fetch(this.base()+"/api/v3/ticker/price");
+        if(!r.ok) return new Map();
+        const all=await r.json();
+        const set=new Set(syms),map=new Map();
+        for(const it of all){ if(set.has(it.symbol)) map.set(it.symbol,+it.price) }
+        return map;
+      },
+      async batch24hStats(m,syms){
+        if(m==="perp") return new Map();
+        const r=await fetch(this.base()+"/api/v3/ticker/24hr");
+        if(!r.ok) return new Map();
+        const data=await r.json();
+        const set=new Set(syms),map=new Map();
+        for(const d of data){ if(set.has(d.symbol)) map.set(d.symbol,{qvol:+d.quoteVolume||0}) }
+        return map;
+      },
+      connectWS(){ return []; }
     }
   };
 
-  // State
+  // --- state ---
   const state={
-    dateStr:null,timeIst:null,marketType:"spot",exchanges:new Set(["mexc"]),timeframe:"auto",
+    dateStr:null,timeIst:null,threshold:0.25,marketType:"spot",exchanges:new Set(["binance"]),timeframe:"auto",
     rows:new Map(),symbols:[],sockets:[],restPoll:null,
     sortKey:"closeness",sortDir:1,lookbackHrs:24,maxClose:null,
-    cg:{list:null,mcapByBase:new Map()}, rvol:{days:20}, pt:{}
+    cg:{list:null,mcapByBase:new Map()}, rvol:{min:1.5,days:20,only:false},
+    pt:{thr:0.25,onlyNear:false}
   };
 
-  // Default date
-  $("#date").value = istDateLabelFromMs(Date.now());
+  // set default date to "today in IST"
+  const now = Date.now();
+  $("#date").value = istDateLabelFromMs(now);
 
-  function setStatus(s){ statusTxt.textContent=s; }
-
-  // Market cap (CoinGecko)
+  // --- CoinGecko mcap ---
   async function ensureCGList(){
     if(state.cg.list) return;
     const r=await fetch("https://api.coingecko.com/api/v3/coins/list?include_platform=false");
@@ -856,32 +518,7 @@
     }
     return idsByBase;
   }
-
-  function hasPro(){
-    // same storage as first script
-    return (localStorage.getItem("asb_pro")==="1") || (localStorage.getItem("asb_admin")==="1");
-  }
-  function openPro(msg){ 
-    // reuse modal in DOM
-    const title="ASB Pro";
-    const html=`<p class="note">${msg||"This is a Pro feature."}</p>
-      <div style="display:flex;gap:10px;flex-wrap:wrap">
-        <button class="btn2 blue" id="goProBtn">Go Pro</button>
-        <button class="btn2 primary" id="unlockBtn">Unlock Code</button>
-      </div>`;
-    document.getElementById("modalTitle").textContent=title;
-    document.getElementById("modalBody").innerHTML=html;
-    document.getElementById("modalBackdrop").style.display="flex";
-    setTimeout(()=>{
-      const go=document.getElementById("goProBtn");
-      const un=document.getElementById("unlockBtn");
-      if(go) go.onclick=()=>document.getElementById("btnPro").click();
-      if(un) un.onclick=()=>document.getElementById("btnUnlock").click();
-    },0);
-  }
-
   async function fetchMarketCaps(){
-    if(!hasPro()){ openPro("Market-cap fetch is Pro."); return; }
     setStatus("Fetching market caps…");
     try{
       await ensureCGList();
@@ -909,12 +546,13 @@
       }
       mcKnown.textContent=String(known);
       scheduleRender(); computeRecommendations(); setStatus("Ready"); play.done();
-    }catch{
+    }catch(e){
       setStatus("CoinGecko error");
     }
   }
 
-  // Render
+  // --- render ---
+  function setStatus(s){ statusTxt.textContent=s; }
   let needsRender=false;
   function scheduleRender(){
     if(needsRender) return;
@@ -969,7 +607,7 @@
     const frag=document.createDocumentFragment();
     if(!rows.length){
       const tr=document.createElement('tr');
-      tr.innerHTML=`<td colspan="21" class="note">No rows match your filters.</td>`;
+      tr.innerHTML=`<td colspan="20" class="note">No rows match your filters.</td>`;
       frag.appendChild(tr);
     }else{
       for(const r of rows){
@@ -996,9 +634,7 @@
           <td>${isF(r.avgQVol)?("$"+fmtInt(r.avgQVol)):"—"}</td>
           <td>${r.mcap? r.mcap.toLocaleString():"—"}</td>
           <td class="note">${r.date||"—"}</td>
-          <td>${dirHtml}</td>
-          <td><a class="trade-btn" href="${tradeUrl(r.symbol)}" target="_blank" rel="noopener noreferrer">Trade</a></td>
-        `;
+          <td>${dirHtml}</td>`;
         frag.appendChild(tr);
       }
     }
@@ -1043,11 +679,7 @@
     const line=x=>{
       const when = Math.max(x.whenHighRecent||0, x.whenLowRecent||0);
       return `<div class="rec-item">
-        <div>
-          <strong>${x.symbolDisp}</strong>
-          <span class="pill">${x.market==="perp"?"Perp":"Spot"}</span>
-          <a class="trade-btn" style="margin-left:8px" href="${tradeUrl(x.symbol)}" target="_blank" rel="noopener noreferrer">Trade</a>
-        </div>
+        <div><strong>${x.symbolDisp}</strong> <span class="pill">${x.market==="perp"?"Perp":"Spot"}</span></div>
         <div class="note">close ${fmtN(x.closeness)}% • ${toIST12(when)}</div>
       </div>`;
     };
@@ -1056,7 +688,7 @@
     recTouch.innerHTML=touched.length?touched.map(line).join(""):`<div class="note">None</div>`;
   }
 
-  // Sorting
+  // --- sorting ---
   $$("thead th").forEach(th=>{
     const k=th.getAttribute("data-k"); if(!k) return;
     th.addEventListener("click",()=>{
@@ -1066,12 +698,15 @@
     },{passive:true});
   });
 
-  // Events
+  // --- event wiring ---
+  $("#threshold").addEventListener("input",e=>{
+    state.threshold=Math.max(0,parseFloat(e.target.value||"0")||0);
+    state.rows.forEach(r=>Object.assign(r,compute(r.price,r.high,r.low)));
+    scheduleRender(); computeRecommendations();
+  },{passive:true});
+  $("#maxClose").addEventListener("input",()=>{ scheduleRender(); computeRecommendations(); },{passive:true});
   $("#marketType").addEventListener("change",async()=>{ state.marketType=$("#marketType").value; await withStatus(loadAll); },{passive:true});
-  $$(".exch").forEach(cb=>cb.addEventListener("change",async()=>{
-    state.exchanges=new Set($$(".exch").filter(x=>x.checked).map(x=>x.value));
-    await withStatus(loadAll);
-  },{passive:true}));
+  $$(".exch").forEach(cb=>cb.addEventListener("change",async()=>{ state.exchanges=new Set($$(".exch").filter(x=>x.checked).map(x=>x.value)); await withStatus(loadAll); },{passive:true}));
   $("#date").addEventListener("change",async()=>{ await withStatus(loadAll); },{passive:true});
   $("#timeIst").addEventListener("change",async()=>{ await withStatus(loadAll); },{passive:true});
   $("#tfSelect").addEventListener("change",async()=>{ state.timeframe=$("#tfSelect").value; await withStatus(loadAll); },{passive:true});
@@ -1079,27 +714,19 @@
   (function(){let t=null; $("#search").addEventListener("input",()=>{clearTimeout(t); t=setTimeout(()=>scheduleRender(),100);});})();
   $("#lookbackHrs").addEventListener("input",()=>{ state.lookbackHrs=Math.max(1,parseInt($("#lookbackHrs").value||"24",10)||24); },{passive:true});
   $("#filterRecent").addEventListener("change",()=>{ scheduleRender(); computeRecommendations(); },{passive:true});
-  $("#threshold").addEventListener("input",e=>{
-    state.rows.forEach(r=>Object.assign(r,compute(r.price,r.high,r.low)));
-    scheduleRender(); computeRecommendations();
-  },{passive:true});
-  $("#maxClose").addEventListener("input",()=>{ scheduleRender(); computeRecommendations(); },{passive:true});
-
+  $("#scanRecentBtn").addEventListener("click",async()=>{ await scanRecentTouches(); });
   $("#loadTop").addEventListener("click",async()=>{ await withStatus(async()=>{ await loadSymbolsTop(); await loadAll(); }); });
   $("#mcFetch").addEventListener("click",async()=>{ await fetchMarketCaps(); });
-
-  $("#rvolCompute").addEventListener("click",async()=>{
-    if(!hasPro()){ openPro("RVOL is Pro."); return; }
-    await computeRVOLAll();
-  });
-  $("#ptCompute").addEventListener("click",async()=>{
-    if(!hasPro()){ openPro("P@Target is Pro."); return; }
-    await computePAtAll();
-  });
-  $("#scanRecentBtn").addEventListener("click",async()=>{
-    // if you want it Pro, gate here; for now it is free in UI toggle above
-    await scanRecentTouches();
-  });
+  $("#mcPreset").addEventListener("change",()=>{ scheduleRender(); computeRecommendations(); },{passive:true});
+  $("#mcMin").addEventListener("input",()=>{ scheduleRender(); computeRecommendations(); },{passive:true});
+  $("#mcMax").addEventListener("input",()=>{ scheduleRender(); computeRecommendations(); },{passive:true});
+  $("#rvolMin").addEventListener("input",()=>{ state.rvol.min=Math.max(0,parseFloat($("#rvolMin").value||"0")||0); scheduleRender(); computeRecommendations(); },{passive:true});
+  $("#rvolDays").addEventListener("input",()=>{ state.rvol.days=Math.min(60,Math.max(5,parseInt($("#rvolDays").value||"20",10)||20)); },{passive:true});
+  $("#rvolOnly").addEventListener("change",()=>{ state.rvol.only=$("#rvolOnly").checked; scheduleRender(); computeRecommendations(); },{passive:true});
+  $("#rvolCompute").addEventListener("click",async()=>{ await computeRVOLAll(); });
+  $("#ptCompute").addEventListener("click",async()=>{ await computePAtAll(); });
+  $("#ptOnlyNear").addEventListener("change",()=>{ scheduleRender(); });
+  $("#ptThr").addEventListener("input",()=>{ scheduleRender(); });
 
   async function withStatus(fn){
     setStatus("Working…");
@@ -1107,9 +734,9 @@
     finally{ setStatus("Ready"); }
   }
 
-  // Load symbols
+  // --- data flow ---
   async function loadSymbolsTop(){
-    const n=parseInt($("#topn").value,10)||300;
+    const n=parseInt($("#topn").value,10)||500;
     const m=state.marketType;
     const exs=Array.from(state.exchanges);
     const out=[];
@@ -1129,7 +756,6 @@
     wsCount.textContent="0";
   }
 
-  // Main load
   async function loadAll(){
     clearSockets();
     clearInterval(state.restPoll);
@@ -1150,7 +776,7 @@
         touchedAnyRecent:false,whenHighRecent:null,whenLowRecent:null,mcap:null,qvol24h:null,avgQVol:null,rvol:null,
         pAt:null,toPtPct:null,
         date: timeLabelISTForWindow(state.dateStr,state.timeIst),
-        dayDir:null
+        dayOpen:null, dayClose:null, dayDir:null
       });
     }
     scheduleRender();
@@ -1193,7 +819,7 @@
     }));
     scheduleRender();
 
-    // TF H/L + day dir
+    // TF H/L + daily OHLC dir
     const tf=state.timeframe;
     const tasks=[];
     Object.keys(groups).forEach(gk=>{
@@ -1210,24 +836,28 @@
             try{
               const d=await a.klineDayOHLC(market,sym,state.dateStr);
               if(d){
+                r.dayOpen=d.open; r.dayClose=d.close;
                 r.dayDir = (d.close>d.open) ? "Bullish" : (d.close<d.open ? "Bearish" : "Doji");
               }
-            }catch{ r.dayDir=null; }
+            }catch{ r.dayOpen=r.dayClose=null; r.dayDir=null; }
 
             // timeframe hi/lo
+            let kl=null;
             if(tf && tf!=="auto"){
-              const kl=await a.klineHL_candleAt(market,sym,tf,state.dateStr,state.timeIst);
+              kl=await a.klineHL_candleAt(market,sym,tf,state.dateStr,state.timeIst);
               if(kl){ r.high=kl.high; r.low=kl.low; r.date=candleIstLabel(kl.open,tf); }
             }else{
               const hasTime=!!state.timeIst;
               const res=hasTime
                 ? await a.klineHL_window(market,sym,state.dateStr,state.timeIst)
                 : await (async()=>{ const d=await a.klineDayOHLC(market,sym,state.dateStr); return d?{high:d.high,low:d.low,open:d.openTs}:null; })();
+
               if(res){
                 r.high=res.high; r.low=res.low;
                 r.date = hasTime ? timeLabelISTForWindow(state.dateStr,state.timeIst) : candleIstLabel(res.open,"1d");
               }
             }
+
             if(isF(r.price)&&isF(r.high)&&isF(r.low)) Object.assign(r,compute(r.price,r.high,r.low));
           }catch{}
         });
@@ -1240,7 +870,7 @@
       if(i%6===0) await new Promise(res=>setTimeout(res,60));
     }
 
-    // sockets (only binance)
+    // live sockets
     let socketCount=0;
     for(const gk of Object.keys(groups)){
       const [ex,market]=gk.split("|");
@@ -1262,7 +892,7 @@
     }
     wsCount.textContent=String(socketCount);
 
-    // REST polling backup
+    // periodic REST backup
     state.restPoll=setInterval(async()=>{
       await Promise.all(Object.keys(groups).map(async gk=>{
         const [ex,market]=gk.split("|");
@@ -1271,7 +901,8 @@
         try{
           const map=await a.batchPrices(market,list);
           map.forEach((p,sym)=>{
-            const r=state.rows.get(`${ex}|${market}|${sym}`); if(!r) return;
+            const r=state.rows.get(`${ex}|${market}|${sym}`);
+            if(!r) return;
             r.price=p;
             if(isF(r.high)&&isF(r.low)) Object.assign(r,compute(r.price,r.high,r.low));
             if(isF(r.pAt)) r.toPtPct=((r.price-r.pAt)/r.pAt)*100;
@@ -1285,7 +916,6 @@
     play.done();
   }
 
-  // Recent touches scan
   async function scanRecentTouches(){
     setStatus("Scanning recent touches…");
     const mins=(parseInt($("#lookbackHrs").value||"24",10)||24)*60;
@@ -1295,11 +925,11 @@
     for(const r of rows){
       const a=Adapters[r.exchangeKey];
       try{
-        // MEXC spot only; binance spot/perp supported similarly
         const end=Date.now();
         const start=end-Math.max(5,mins)*60e3;
         const interval=mins<=999?"1m":"5m";
 
+        // only works for binance/mexc spot endpoints used here
         const base = (r.exchangeKey==="binance") ? a.base(r.market) : a.base();
         const ep = (r.exchangeKey==="binance")
           ? (r.market==="perp"?"/fapi/v1/klines":"/api/v3/klines")
@@ -1328,16 +958,16 @@
     scheduleRender(); computeRecommendations(); setStatus("Ready"); play.done();
   }
 
-  // RVOL
   async function computeRVOLAll(){
-    const days=Math.min(60,Math.max(5,parseInt($("#rvolDays").value||"20",10)||20));
+    const days=state.rvol.days=Math.min(60,Math.max(5,parseInt($("#rvolDays").value||"20",10)||20));
     setStatus(`Computing RVOL (days=${days})…`);
     let known=0,i=0;
-
     const rows=Array.from(state.rows.values());
+
     for(const r of rows){
       const a=Adapters[r.exchangeKey];
       try{
+        // MEXC perp not supported
         if(r.exchangeKey==="mexc" && r.market==="perp") throw 0;
 
         const base = (r.exchangeKey==="binance") ? a.base(r.market) : a.base();
@@ -1379,7 +1009,6 @@
     scheduleRender(); computeRecommendations(); setStatus("Ready"); play.done();
   }
 
-  // P@Target
   async function computePAtAll(){
     if(!state.timeIst){ alert("Please set a Target Time (IST) to compute P@Target."); return; }
     setStatus("Fetching P@Target (1m)…");
@@ -1411,10 +1040,10 @@
     scheduleRender(); setStatus(`Ready (${known} P@Target)`); play.done();
   }
 
-  // Init
+  // --- init ---
   (async function init(){
     state.marketType="spot";
-    state.exchanges=new Set(["mexc"]); // default MEXC
+    state.exchanges=new Set(["binance"]);
     state.timeframe="auto";
     await loadSymbolsTop();
     await loadAll();
@@ -1427,11 +1056,5 @@
   });
 })();
 </script>
-
-<script>
-  // expose CONFIG safely for the 2nd script (optional)
-  window.CONFIG = window.CONFIG || {};
-</script>
-
 </body>
 </html>
