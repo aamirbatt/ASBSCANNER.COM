@@ -10,11 +10,55 @@
     --muted:#9fb0d4; --text:#e8eefc; --border:#22304a;
     --accent:#5eead4; --ok:#9ae6b4; --warn:#ffd166; --danger:#ff6b6b;
     --chip:#12203a; --glow:0 0 0 rgba(94,234,212,.0),0 0 0 rgba(94,234,212,.0);
+    --shadow:0 10px 30px rgba(0,0,0,.25);
   }
   html,body{height:100%}
   body{margin:0;background:radial-gradient(1200px 600px at 10% -10%,#0d1a30 0,#0b1220 40%,#0a1020 100%);color:var(--text);font:14px system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased}
   *{box-sizing:border-box}
   .wrap{max-width:1320px;margin:22px auto;padding:0 14px}
+
+  /* ===== NEW: Sticky top action bar ===== */
+  .topbar{
+    position:sticky; top:12px; z-index:8;
+    display:flex; gap:10px; align-items:center; justify-content:space-between; flex-wrap:wrap;
+    background:rgba(15,23,42,.72);
+    border:1px solid var(--border);
+    border-radius:18px;
+    padding:10px 12px;
+    box-shadow:var(--shadow);
+    backdrop-filter: blur(10px);
+    margin-bottom:12px;
+  }
+  .brand{display:flex;gap:10px;align-items:center}
+  .logo{
+    width:38px;height:38px;border-radius:14px;
+    background:linear-gradient(135deg, rgba(94,234,212,.95), rgba(96,165,250,.85));
+    box-shadow:0 0 0 3px rgba(94,234,212,.08);
+  }
+  .brand h1{margin:0;font-size:14px;letter-spacing:.2px}
+  .brand .sub{margin:0;color:var(--muted);font-size:12px}
+  .top-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
+  .btn2{
+    background:#0c1426;color:var(--text);
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:8px 10px; min-height:36px;
+    cursor:pointer; user-select:none;
+    transition:border-color .15s ease, transform .05s ease;
+  }
+  .btn2:hover{transform:translateY(-1px);border-color:rgba(94,234,212,.55)}
+  .btn2:active{transform:translateY(0)}
+  .btn2.primary{border-color:rgba(94,234,212,.55); background:rgba(94,234,212,.10)}
+  .btn2.blue{border-color:rgba(96,165,250,.55); background:rgba(96,165,250,.10)}
+  .btn2.danger{border-color:rgba(239,68,68,.55); background:rgba(239,68,68,.10)}
+  .pro-pill{
+    padding:6px 10px;border-radius:999px;border:1px solid var(--border);
+    font-size:12px;background:var(--chip);color:var(--muted);display:inline-flex;align-items:center;gap:8px;
+  }
+  .pro-pill.on{border-color:rgba(34,197,94,.55);background:rgba(34,197,94,.10);color:rgba(167,243,208,.95)}
+  .pro-pill.off{border-color:rgba(239,68,68,.55);background:rgba(239,68,68,.10);color:rgba(254,202,202,.95)}
+
+  /* ===== existing UI ===== */
   .panel{background:linear-gradient(180deg,var(--panel),var(--panel2));border:1px solid var(--border);border-radius:18px;padding:12px 14px;box-shadow:0 10px 30px rgba(0,0,0,.25)}
   .row{display:flex;flex-wrap:wrap;gap:10px;align-items:end}
   .col{display:flex;flex-direction:column;gap:6px;min-width:160px}
@@ -58,11 +102,82 @@
   .pill.bear{background:rgba(61,16,16,.55);border-color:#6b2b2b;color:#ff7b7b}
   .pill.doji{background:rgba(61,49,16,.55);border-color:#6b5a2b;color:#ffd166}
 
-  @media (max-width: 980px){.recs{grid-template-columns:1fr}.grid{height:56vh}}
+  /* ===== NEW: Trade button ===== */
+  .trade-btn{
+    display:inline-flex;align-items:center;justify-content:center;
+    padding:7px 10px;border-radius:12px;
+    border:1px solid rgba(94,234,212,.55);
+    background:rgba(94,234,212,.10);
+    color:var(--text); text-decoration:none; font-size:12px;
+  }
+  .trade-btn:hover{border-color:rgba(94,234,212,.85); background:rgba(94,234,212,.16)}
+
+  /* ===== NEW: Modal ===== */
+  .modal-backdrop{
+    position:fixed; inset:0;
+    background: rgba(0,0,0,.55);
+    display:none; align-items:center; justify-content:center;
+    padding:20px; z-index: 999;
+  }
+  .modal{
+    width:min(860px, 100%);
+    background: rgba(11,18,32,.98);
+    border:1px solid var(--border);
+    border-radius: 18px;
+    box-shadow: var(--shadow);
+    padding:16px;
+  }
+  .modal header{display:flex; align-items:center; justify-content:space-between; gap:12px}
+  .modal h4{margin:0; font-size:16px}
+  .modal .content{margin-top:12px; color:var(--muted); font-size:13px; line-height:1.55}
+  .pricing{display:grid; grid-template-columns: repeat(3,1fr); gap:10px; margin-top:12px}
+  .price-card{border:1px solid var(--border); border-radius:16px; padding:14px; background: rgba(15,23,42,.55)}
+  .price{font-size:20px; color:var(--text); margin-top:6px}
+  .ul{margin:10px 0 0; padding-left:18px}
+  .ul li{margin:6px 0}
+  .divider{height:1px; background: rgba(34,48,74,.7); margin:12px 0}
+
+  /* ===== NEW: Footer ===== */
+  .footer{
+    margin-top:12px;
+    border:1px solid var(--border);
+    border-radius:18px;
+    padding:12px 14px;
+    background:linear-gradient(180deg,var(--panel),var(--panel2));
+    box-shadow:0 10px 30px rgba(0,0,0,.18);
+  }
+  .footer .tiny{font-size:12px;color:var(--muted);line-height:1.6}
+  .footer .links{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+  .footer a{color:inherit}
+  @media (max-width: 980px){
+    .recs{grid-template-columns:1fr}
+    .grid{height:56vh}
+    .pricing{grid-template-columns:1fr}
+  }
 </style>
 </head>
 <body>
+
 <div class="wrap">
+
+  <!-- ===== NEW: Monetization + Pro Bar ===== -->
+  <div class="topbar">
+    <div class="brand">
+      <div class="logo"></div>
+      <div>
+        <h1>ASB Scanner</h1>
+        <p class="sub">Affiliate trade buttons • Pro unlock • Share • Privacy/Terms</p>
+      </div>
+    </div>
+    <div class="top-actions">
+      <span id="proBadge" class="pro-pill off">Pro: Locked 🔒</span>
+      <button id="btnShare" class="btn2" data-sound="click">Share</button>
+      <button id="btnPro" class="btn2 blue" data-sound="click">Go Pro</button>
+      <button id="btnUnlock" class="btn2 primary" data-sound="click">Unlock</button>
+      <button id="btnLock" class="btn2 danger" data-sound="click">Lock</button>
+    </div>
+  </div>
+
   <div class="panel">
     <div class="row" style="align-items:center;justify-content:space-between">
       <h2>Target-Date Proximity <span class="note">— live % to Timeframe High/Low + P@Target (IST, 12-hour) + Day Close Dir</span></h2>
@@ -78,9 +193,13 @@
           <option value="auto" selected>Auto (whole day / to time)</option>
           <option value="15m">15m</option><option value="30m">30m</option>
           <option value="1h">1h</option><option value="2h">2h</option>
-          <option value="4h">4h</option><option value="6h">6h</option>
-          <option value="8h">8h</option><option value="12h">12h</option>
-          <option value="1d">1d</option><option value="3d">3d</option><option value="1w">1w</option>
+          <option value="4h">4h</option>
+          <option value="6h">6h</option>
+          <option value="8h">8h</option>
+          <option value="12h">12h</option>
+          <option value="1d">1d</option>
+          <option value="3d">3d</option>
+          <option value="1w">1w</option>
         </select>
       </div>
       <div class="col">
@@ -176,10 +295,11 @@
           <th data-k="mcap">M.Cap (USD)</th>
           <th data-k="date">Candle (IST)</th>
           <th data-k="daydir">Day Close</th>
+          <th>Trade</th><!-- NEW -->
         </tr>
       </thead>
       <tbody id="tbody">
-        <tr class="skel"><td colspan="20" style="height:120px"></td></tr>
+        <tr class="skel"><td colspan="21" style="height:120px"></td></tr>
       </tbody>
     </table>
   </div>
@@ -191,10 +311,201 @@
   </div>
 
   <p class="note" style="margin-top:10px">Binance: WebSocket live. MEXC Spot: REST polling. M.Cap: CoinGecko best-effort symbol match. All times shown in IST (12-hour).</p>
+
+  <!-- ===== NEW: Footer / Legal ===== -->
+  <div class="footer">
+    <div class="tiny">
+      <b>Disclaimer:</b> This tool is for educational purposes only. Crypto trading involves high risk and you may lose money. Nothing here is financial advice.
+      <br/>
+      <b>Affiliate notice:</b> Some links may be affiliate links—at no extra cost to you, I may earn a commission if you sign up or trade.
+    </div>
+    <div class="links">
+      <button id="btnPrivacy" class="btn2" data-sound="click">Privacy</button>
+      <button id="btnTerms" class="btn2" data-sound="click">Terms</button>
+    </div>
+    <div class="tiny" style="margin-top:8px;opacity:.9">
+      © <span id="year"></span> ASB Scanner • Built by ASB Trading School
+    </div>
+  </div>
+
+</div>
+
+<!-- ===== NEW: Modal ===== -->
+<div class="modal-backdrop" id="modalBackdrop">
+  <div class="modal">
+    <header>
+      <h4 id="modalTitle">Modal</h4>
+      <button class="btn2" id="modalClose" data-sound="click">Close</button>
+    </header>
+    <div class="content" id="modalBody"></div>
+  </div>
 </div>
 
 <script>
 (function(){
+  /************************************************************
+   * NEW: MONETIZATION CONFIG (EDIT THESE)
+   ************************************************************/
+  const CONFIG = {
+    // Put YOUR affiliate links here (you can use full referral URLs):
+    // Tip: you can keep these as direct referral links to homepage if you want.
+    AFFILIATE: {
+      BINANCE_REF: "https://www.binance.com/", // <-- replace with your Binance affiliate link
+      MEXC_REF:    "https://www.mexc.com/",    // <-- replace with your MEXC affiliate link
+    },
+
+    // Optional: if you want trade links to open the exact pair page, set these true.
+    // If false, it will open your referral homepage link above.
+    OPEN_PAIR_PAGE: true,
+
+    // Razorpay / Stripe payment link for Pro (paste your payment link)
+    PRO_PAYMENT_LINK: "https://razorpay.com/", // <-- replace
+
+    // Basic access codes (change and share only after payment)
+    PRO_CODES: ["ASBPRO2025", "ASBVIP", "ASBTRADER"],
+
+    // Gate these features behind Pro:
+    PRO_GATES: {
+      RVOL: true,
+      MCAP: true,
+      PTARGET: true,
+      RECENT_TOUCHES: false
+    }
+  };
+
+  let proUnlocked = (localStorage.getItem("asb_pro") === "1");
+
+  function setProBadge(){
+    const el = document.getElementById("proBadge");
+    if(!el) return;
+    if(proUnlocked){
+      el.classList.remove("off"); el.classList.add("on");
+      el.textContent = "Pro: Unlocked ✅";
+    }else{
+      el.classList.remove("on"); el.classList.add("off");
+      el.textContent = "Pro: Locked 🔒";
+    }
+  }
+
+  function openModal(title, html){
+    document.getElementById("modalTitle").textContent = title;
+    document.getElementById("modalBody").innerHTML = html;
+    document.getElementById("modalBackdrop").style.display = "flex";
+  }
+  function closeModal(){
+    document.getElementById("modalBackdrop").style.display = "none";
+  }
+
+  function openProModal(extraMsg=""){
+    const html = `
+      <div>
+        ${extraMsg ? `<div class="pill" style="border-color:rgba(245,158,11,.55);background:rgba(245,158,11,.10);color:#ffd166;margin-bottom:10px;">${extraMsg}</div>` : ""}
+        <p><b>Go Pro</b> to unlock premium features + support development.</p>
+
+        <div class="pricing">
+          <div class="price-card">
+            <div class="note">Starter</div>
+            <div class="price">₹499 / month</div>
+            <ul class="ul">
+              <li>RVOL tools</li>
+              <li>Market-cap filter</li>
+              <li>Priority updates</li>
+            </ul>
+          </div>
+          <div class="price-card">
+            <div class="note">Pro</div>
+            <div class="price">₹999 / month</div>
+            <ul class="ul">
+              <li>All Starter features</li>
+              <li>P@Target tools</li>
+              <li>Faster workflow</li>
+            </ul>
+          </div>
+          <div class="price-card">
+            <div class="note">VIP</div>
+            <div class="price">₹1999 / month</div>
+            <ul class="ul">
+              <li>All Pro features</li>
+              <li>Alerts (Telegram/WhatsApp)</li>
+              <li>Daily top setups</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <a class="btn2 blue" href="${CONFIG.PRO_PAYMENT_LINK}" target="_blank" rel="noopener noreferrer">Pay & Get Pro</a>
+          <button class="btn2 primary" id="modalUnlockBtn">I already have a code</button>
+        </div>
+
+        <p class="note" style="margin-top:10px">
+          Note: This is a basic unlock system. Later, you can upgrade to real login (Firebase/Supabase).
+        </p>
+      </div>
+    `;
+    openModal("ASB Pro", html);
+    setTimeout(()=>{
+      const b = document.getElementById("modalUnlockBtn");
+      if(b) b.onclick = ()=> unlockPro();
+    }, 0);
+  }
+
+  function unlockPro(){
+    const code = prompt("Enter Pro Access Code:");
+    if(!code) return;
+    const ok = CONFIG.PRO_CODES.includes(code.trim());
+    if(ok){
+      proUnlocked = true;
+      localStorage.setItem("asb_pro","1");
+      setProBadge();
+      alert("Pro unlocked ✅");
+      closeModal();
+    }else{
+      alert("Invalid code.");
+    }
+  }
+  function lockPro(){
+    proUnlocked = false;
+    localStorage.removeItem("asb_pro");
+    setProBadge();
+  }
+
+  async function shareSite(){
+    const url = location.href;
+    try{
+      if(navigator.share){
+        await navigator.share({title: document.title, text: "ASB Scanner", url});
+      }else{
+        await navigator.clipboard.writeText(url);
+        alert("Link copied: " + url);
+      }
+    }catch(e){
+      try{ await navigator.clipboard.writeText(url); }catch(_){}
+    }
+  }
+
+  function openPrivacy(){
+    openModal("Privacy Policy", `
+      <p><b>Privacy Policy</b></p>
+      <p>We may collect basic usage data to improve the scanner. We do not sell personal data.</p>
+      <p>Third-party services (exchanges/affiliate partners) may use cookies. By using this site you agree.</p>
+      <p class="note">Update this text if you add AdSense / Analytics / email forms.</p>
+    `);
+  }
+  function openTerms(){
+    openModal("Terms & Conditions", `
+      <p><b>Terms</b></p>
+      <ul class="ul">
+        <li>This tool is educational and not financial advice.</li>
+        <li>You are responsible for your trading decisions and any losses.</li>
+        <li>We may change features anytime without notice.</li>
+        <li>Some links are affiliate links and may generate commission.</li>
+      </ul>
+      <p class="note">Edit these terms as per your policy.</p>
+    `);
+  }
+
   // --- sound (simple) ---
   let audioCtx=null; const prefersReduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
   function beep({freq=520,dur=70,type='triangle',vol=0.08}={}){ try{ audioCtx ||= new (window.AudioContext||window.webkitAudioContext)(); }catch(_){return}
@@ -210,6 +521,19 @@
   const mcKnown=$("#mcKnown"), recHigh=$("#recHigh"), recLow=$("#recLow"), recTouch=$("#recTouch");
   const rvKnown=$("#rvKnown"), ptKnown=$("#ptKnown");
 
+  // ===== NEW: Pro + footer wiring =====
+  document.getElementById("year").textContent = new Date().getFullYear();
+  document.getElementById("modalClose").addEventListener("click", closeModal);
+  document.getElementById("modalBackdrop").addEventListener("click", (e)=>{ if(e.target===document.getElementById("modalBackdrop")) closeModal(); });
+
+  document.getElementById("btnShare").addEventListener("click", shareSite);
+  document.getElementById("btnPro").addEventListener("click", ()=>openProModal());
+  document.getElementById("btnUnlock").addEventListener("click", unlockPro);
+  document.getElementById("btnLock").addEventListener("click", lockPro);
+  document.getElementById("btnPrivacy").addEventListener("click", openPrivacy);
+  document.getElementById("btnTerms").addEventListener("click", openTerms);
+  setProBadge();
+
   const NF=new Intl.NumberFormat(undefined,{maximumFractionDigits:2});
   const NF3=new Intl.NumberFormat(undefined,{maximumFractionDigits:3});
   const NFi0=new Intl.NumberFormat(undefined,{maximumFractionDigits:0});
@@ -220,9 +544,6 @@
 
   // =========================================================
   // TIME FIX (IST correctness + 12-hour display)
-  // - Treat the Date input as an IST calendar day.
-  // - Convert IST date/time -> UTC ms for exchange APIs.
-  // - Display with Intl.DateTimeFormat timeZone Asia/Kolkata (hour12:true).
   // =========================================================
   const IST_OFFSET_MS = 5.5 * 3600e3; // fixed (no DST)
   const IST_TZ = "Asia/Kolkata";
@@ -325,6 +646,37 @@
     const px = (clamped/100)*118; // bar width 120, keep inside
     return `<span class="bar"><i class="lo"></i><i class="hi"></i><i class="p" style="left:${px}px"></i></span>`;
   };
+
+  /************************************************************
+   * NEW: Affiliate trade link (per row)
+   ************************************************************/
+  function pairForBinanceSpot(sym){ // BTCUSDT -> BTC_USDT
+    if(!sym) return "";
+    if(sym.endsWith("USDT")) return sym.replace("USDT","_USDT");
+    return sym;
+  }
+  function tradeUrlForRow(r){
+    // If you prefer referral homepage always:
+    if(!CONFIG.OPEN_PAIR_PAGE){
+      return (r.exchangeKey==="mexc") ? CONFIG.AFFILIATE.MEXC_REF : CONFIG.AFFILIATE.BINANCE_REF;
+    }
+
+    // Pair-page style:
+    if(r.exchangeKey==="binance"){
+      if(r.market==="perp"){
+        // futures usually uses BTCUSDT etc.
+        return `https://www.binance.com/en/futures/${encodeURIComponent(r.symbol)}`;
+      }
+      // spot
+      const pair = pairForBinanceSpot(r.symbol);
+      return `https://www.binance.com/en/trade/${encodeURIComponent(pair)}?type=spot`;
+    }
+    if(r.exchangeKey==="mexc"){
+      // MEXC spot
+      return `https://www.mexc.com/exchange/${encodeURIComponent(r.symbol)}`;
+    }
+    return CONFIG.AFFILIATE.BINANCE_REF;
+  }
 
   // --- Adapters (Binance + MEXC) ---
   const Adapters={
@@ -519,6 +871,11 @@
     return idsByBase;
   }
   async function fetchMarketCaps(){
+    if(CONFIG.PRO_GATES.MCAP && !proUnlocked){
+      openProModal("Market-cap fetch is a Pro feature.");
+      return;
+    }
+
     setStatus("Fetching market caps…");
     try{
       await ensureCGList();
@@ -607,7 +964,7 @@
     const frag=document.createDocumentFragment();
     if(!rows.length){
       const tr=document.createElement('tr');
-      tr.innerHTML=`<td colspan="20" class="note">No rows match your filters.</td>`;
+      tr.innerHTML=`<td colspan="21" class="note">No rows match your filters.</td>`;
       frag.appendChild(tr);
     }else{
       for(const r of rows){
@@ -634,7 +991,9 @@
           <td>${isF(r.avgQVol)?("$"+fmtInt(r.avgQVol)):"—"}</td>
           <td>${r.mcap? r.mcap.toLocaleString():"—"}</td>
           <td class="note">${r.date||"—"}</td>
-          <td>${dirHtml}</td>`;
+          <td>${dirHtml}</td>
+          <td><a class="trade-btn" href="${tradeUrlForRow(r)}" target="_blank" rel="noopener noreferrer">Trade</a></td>
+        `;
         frag.appendChild(tr);
       }
     }
@@ -642,7 +1001,7 @@
     rowCount.textContent=String(rows.length);
 
     $$("thead th").forEach(th=>th.classList.remove("sort-asc","sort-desc"));
-    const th=document.querySelector(`thead th[data-k="${state.sortKey}"]`);
+    const th=document.querySelector(\`thead th[data-k="\${state.sortKey}"]\`);
     if(th) th.classList.add(state.sortDir===1?"sort-asc":"sort-desc");
 
     if(!prefersReduced) tbody.querySelectorAll('.bar .p').forEach(el=>{el.classList.remove('ping'); void el.offsetWidth; el.classList.add('ping');});
@@ -679,7 +1038,10 @@
     const line=x=>{
       const when = Math.max(x.whenHighRecent||0, x.whenLowRecent||0);
       return `<div class="rec-item">
-        <div><strong>${x.symbolDisp}</strong> <span class="pill">${x.market==="perp"?"Perp":"Spot"}</span></div>
+        <div>
+          <strong>${x.symbolDisp}</strong> <span class="pill">${x.market==="perp"?"Perp":"Spot"}</span>
+          <a class="trade-btn" style="margin-left:8px" href="${tradeUrlForRow(x)}" target="_blank" rel="noopener noreferrer">Trade</a>
+        </div>
         <div class="note">close ${fmtN(x.closeness)}% • ${toIST12(when)}</div>
       </div>`;
     };
@@ -714,17 +1076,38 @@
   (function(){let t=null; $("#search").addEventListener("input",()=>{clearTimeout(t); t=setTimeout(()=>scheduleRender(),100);});})();
   $("#lookbackHrs").addEventListener("input",()=>{ state.lookbackHrs=Math.max(1,parseInt($("#lookbackHrs").value||"24",10)||24); },{passive:true});
   $("#filterRecent").addEventListener("change",()=>{ scheduleRender(); computeRecommendations(); },{passive:true});
-  $("#scanRecentBtn").addEventListener("click",async()=>{ await scanRecentTouches(); });
+  $("#scanRecentBtn").addEventListener("click",async()=>{
+    if(CONFIG.PRO_GATES.RECENT_TOUCHES && !proUnlocked){
+      openProModal("Recent Touches scan is a Pro feature.");
+      return;
+    }
+    await scanRecentTouches();
+  });
   $("#loadTop").addEventListener("click",async()=>{ await withStatus(async()=>{ await loadSymbolsTop(); await loadAll(); }); });
+
   $("#mcFetch").addEventListener("click",async()=>{ await fetchMarketCaps(); });
   $("#mcPreset").addEventListener("change",()=>{ scheduleRender(); computeRecommendations(); },{passive:true});
   $("#mcMin").addEventListener("input",()=>{ scheduleRender(); computeRecommendations(); },{passive:true});
   $("#mcMax").addEventListener("input",()=>{ scheduleRender(); computeRecommendations(); },{passive:true});
+
   $("#rvolMin").addEventListener("input",()=>{ state.rvol.min=Math.max(0,parseFloat($("#rvolMin").value||"0")||0); scheduleRender(); computeRecommendations(); },{passive:true});
   $("#rvolDays").addEventListener("input",()=>{ state.rvol.days=Math.min(60,Math.max(5,parseInt($("#rvolDays").value||"20",10)||20)); },{passive:true});
   $("#rvolOnly").addEventListener("change",()=>{ state.rvol.only=$("#rvolOnly").checked; scheduleRender(); computeRecommendations(); },{passive:true});
-  $("#rvolCompute").addEventListener("click",async()=>{ await computeRVOLAll(); });
-  $("#ptCompute").addEventListener("click",async()=>{ await computePAtAll(); });
+  $("#rvolCompute").addEventListener("click",async()=>{
+    if(CONFIG.PRO_GATES.RVOL && !proUnlocked){
+      openProModal("RVOL compute is a Pro feature.");
+      return;
+    }
+    await computeRVOLAll();
+  });
+
+  $("#ptCompute").addEventListener("click",async()=>{
+    if(CONFIG.PRO_GATES.PTARGET && !proUnlocked){
+      openProModal("P@Target is a Pro feature.");
+      return;
+    }
+    await computePAtAll();
+  });
   $("#ptOnlyNear").addEventListener("change",()=>{ scheduleRender(); });
   $("#ptThr").addEventListener("input",()=>{ scheduleRender(); });
 
