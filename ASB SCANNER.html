@@ -1,1 +1,700 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>ASB Scanner — MEXC • Target-Date Proximity • IST • Admin PRO Lock</title>
+<style>
+  :root{
+    --bg:#0b1220; --panel:#0f172a; --panel2:#0d1628;
+    --muted:#9fb0d4; --text:#e8eefc; --border:#22304a;
+    --accent:#5eead4; --ok:#9ae6b4; --warn:#ffd166; --danger:#ff6b6b;
+    --chip:#12203a;
+  }
+  html,body{height:100%}
+  body{
+    margin:0;
+    background:radial-gradient(1200px 600px at 10% -10%,#0d1a30 0,#0b1220 40%,#0a1020 100%);
+    color:var(--text);
+    font:14px system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  *{box-sizing:border-box}
+  .wrap{max-width:1320px;margin:22px auto;padding:0 14px}
+  .panel{
+    background:linear-gradient(180deg,var(--panel),var(--panel2));
+    border:1px solid var(--border);
+    border-radius:18px;
+    padding:12px 14px;
+    box-shadow:0 10px 30px rgba(0,0,0,.25);
+  }
+  .row{display:flex;flex-wrap:wrap;gap:10px;align-items:end}
+  .col{display:flex;flex-direction:column;gap:6px;min-width:160px}
+  h2{font-weight:700;letter-spacing:.2px;margin:0}
+  label{font-size:12px;color:var(--muted)}
+  input,select,button{
+    background:#0c1426;color:var(--text);
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:8px 10px;min-height:36px;outline:none;
+    transition:border-color .15s ease, transform .05s ease;
+  }
+  input:focus,select:focus{border-color:#355080;box-shadow:0 0 0 3px rgba(53,80,128,.22)}
+  button{cursor:pointer;user-select:none}
+  .btn{
+    background:linear-gradient(90deg,#1b2a44,#17354a);
+    border-color:#2b3b5a;
+    box-shadow:0 6px 16px rgba(0,0,0,.25)
+  }
+  .btn:hover{transform:translateY(-1px)}
+  .btn:active{transform:translateY(0)}
+  .pill{
+    padding:4px 8px;border-radius:999px;border:1px solid var(--border);
+    font-size:12px;display:inline-flex;align-items:center;gap:6px;background:var(--chip)
+  }
+  .pill.ok{background:rgba(16,61,39,.55);border-color:#2b6b46;color:#9ae6b4}
+  .pill.bad{background:rgba(61,16,16,.55);border-color:#6b2b2b;color:#ff7b7b}
+  .note{color:var(--muted);font-size:12px}
+  .stats{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+  .stat{padding:6px 10px;border-radius:999px;border:1px solid var(--border);font-size:12px;background:#0c1426}
+
+  .grid{margin-top:12px;border:1px solid var(--border);border-radius:18px;overflow:auto;height:56vh}
+  table{width:100%;border-collapse:separate;border-spacing:0}
+  thead th{
+    position:sticky;top:0;
+    background:linear-gradient(180deg,#111b2e,#0f172a);
+    border-bottom:1px solid var(--border);
+    z-index:2;font-weight:700;color:#cbd5f1;
+    backdrop-filter:blur(4px)
+  }
+  th,td{padding:10px;text-align:right;white-space:nowrap}
+  th:first-child,td:first-child{text-align:left}
+  tbody tr:nth-child(odd){background:#0c1426}
+  tbody tr:hover{background:#0e1830}
+
+  thead th[data-k]{cursor:pointer;user-select:none;position:relative}
+  thead th[data-k]::after{
+    content:"";position:absolute;right:8px;top:50%;
+    width:8px;height:8px;border-right:2px solid #6aa7a0;border-bottom:2px solid #6aa7a0;
+    opacity:.35;transform:translateY(-50%) rotate(-45deg)
+  }
+  thead th.sort-asc::after{opacity:.9;transform:translateY(-50%) rotate(-135deg)}
+  thead th.sort-desc::after{opacity:.9;transform:translateY(-50%) rotate(45deg)}
+
+  .bar{width:120px;height:8px;border-radius:999px;background:#0c1426;border:1px solid var(--border);position:relative;display:inline-block;overflow:hidden}
+  .bar>i{position:absolute;top:-3px;width:2px;height:14px;background:#6dd6c8;border-radius:1px}
+  .bar .lo{left:0}.bar .hi{right:0}.bar .p{background:var(--ok)}
+
+  .trade-btn{
+    display:inline-flex;align-items:center;justify-content:center;
+    padding:7px 10px;border-radius:12px;
+    border:1px solid rgba(94,234,212,.55);
+    background:rgba(94,234,212,.10);
+    color:var(--text); text-decoration:none; font-size:12px;
+  }
+  .trade-btn:hover{border-color:rgba(94,234,212,.85); background:rgba(94,234,212,.16)}
+
+  .pro{border:1px dashed #2b6b46;background:rgba(16,61,39,.18);border-radius:16px;padding:10px}
+  .hidden{display:none !important}
+
+  @media (max-width: 980px){
+    .grid{height:58vh}
+  }
+</style>
+</head>
+
+<body>
+<div class="wrap">
+
+  <div class="panel">
+    <div class="row" style="align-items:center;justify-content:space-between">
+      <h2>ASB Scanner <span class="note">— MEXC (Spot) • IST • Admin PRO Lock</span></h2>
+      <div class="row" style="align-items:center">
+        <a class="trade-btn" href="https://promote.mexc.co/r/5S4fzXCz" target="_blank" rel="noopener noreferrer">Join MEXC (Referral)</a>
+        <button id="refresh" class="btn">Refresh</button>
+      </div>
+    </div>
+
+    <div class="row" style="margin-top:10px">
+      <div class="col"><label>Target Date (IST)</label><input type="date" id="date"></div>
+      <div class="col"><label>Target Time (IST)</label><input type="time" id="timeIst" step="60"></div>
+      <div class="col">
+        <label>Timeframe candle</label>
+        <select id="tfSelect">
+          <option value="auto" selected>Auto (fast)</option>
+          <option value="15m">15m</option>
+          <option value="30m">30m</option>
+          <option value="1h">1h</option>
+          <option value="2h">2h</option>
+          <option value="4h">4h</option>
+          <option value="6h">6h</option>
+          <option value="12h">12h</option>
+          <option value="1d">1d</option>
+        </select>
+      </div>
+
+      <div class="col">
+        <label>Top N (FREE)</label>
+        <select id="topnFree">
+          <option>20</option>
+          <option selected>60</option>
+          <option>100</option>
+        </select>
+      </div>
+
+      <div class="col" id="topnProWrap">
+        <label>Top N (PRO)</label>
+        <select id="topnPro">
+          <option>150</option>
+          <option>200</option>
+          <option>300</option>
+          <option>500</option>
+        </select>
+      </div>
+
+      <div class="col"><label>Near threshold (%)</label><input type="number" id="threshold" value="0.25" step="0.01" min="0"></div>
+      <div class="col"><label>Quick search</label><input id="search" placeholder="BTC, ETH, PEPE…"></div>
+
+      <div class="col"><label> </label><button id="loadTop" class="btn">Load Top</button></div>
+      <div class="col"><label> </label><button id="exportCsv" class="btn">Export CSV (PRO)</button></div>
+    </div>
+
+    <div class="row" style="margin-top:10px">
+      <div class="col" style="min-width:320px">
+        <div class="pro">
+          <div class="row" style="align-items:center;justify-content:space-between">
+            <div>
+              <div class="pill" id="adminPill">Admin: <b>Locked</b></div>
+              <div class="note" style="margin-top:4px">
+                Admin code is a basic lock on static site (not true security).
+              </div>
+            </div>
+            <div class="row" style="align-items:center">
+              <input id="adminPin" type="password" inputmode="numeric" maxlength="4" placeholder="Admin PIN" style="width:140px">
+              <button id="adminUnlock" class="btn">Unlock</button>
+              <button id="adminLock" class="btn">Lock</button>
+            </div>
+          </div>
+
+          <div class="row" style="margin-top:10px">
+            <label class="pill"><input id="proEnable" type="checkbox" style="accent-color:#4fd1c5"> Enable PRO Mode</label>
+            <span class="note">PRO enables: higher TopN + Export CSV</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="col" style="flex:1;min-width:280px">
+        <div class="stats">
+          <span class="stat">Rows: <strong id="rowCount">0</strong></span>
+          <span class="stat">Status: <strong id="statusTxt">Idle</strong></span>
+          <span class="stat">Mode: <strong id="modeTxt">FREE</strong></span>
+        </div>
+        <div class="note" style="margin-top:8px">
+          <b>Speed tip:</b> If your website loads slow, keep TopN = 60. Increase only after stable.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid">
+    <table>
+      <thead>
+        <tr>
+          <th data-k="symbol">Symbol</th>
+          <th data-k="price">Live</th>
+          <th data-k="high">High</th>
+          <th data-k="low">Low</th>
+          <th data-k="rangePct">%(Hi↔Low)</th>
+          <th data-k="toHighPct">% to High</th>
+          <th data-k="toLowPct">% to Low</th>
+          <th data-k="closeness">Closeness</th>
+          <th data-k="posPct">Pos%</th>
+          <th>Proximity</th>
+          <th>Trade</th>
+        </tr>
+      </thead>
+      <tbody id="tbody">
+        <tr><td colspan="11" class="note">Click <b>Load Top</b> to start.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+<script>
+(() => {
+  /***********************
+   * ADMIN SETTINGS
+   ***********************/
+  const ADMIN_PIN = "9505";   // ✅ Your simple admin code
+  const ADMIN_KEY = "asb_admin_unlocked";
+  const PRO_KEY   = "asb_pro_enabled";
+
+  /***********************
+   * PERFORMANCE SETTINGS
+   ***********************/
+  const CONFIG = {
+    MAX_CONCURRENCY_FREE: 10,
+    MAX_CONCURRENCY_PRO:  18,
+    FETCH_TIMEOUT_MS: 12000,
+    REST_POLL_MS: 8000
+  };
+
+  const $ = (q) => document.querySelector(q);
+  const $$ = (q) => Array.from(document.querySelectorAll(q));
+
+  const tbody = $("#tbody");
+  const rowCount = $("#rowCount");
+  const statusTxt = $("#statusTxt");
+  const modeTxt = $("#modeTxt");
+
+  const isF = (x) => Number.isFinite(x);
+  const NF = new Intl.NumberFormat(undefined, { maximumFractionDigits: 8 });
+  const NF2 = new Intl.NumberFormat(undefined, { maximumFractionDigits: 2 });
+  const fmt = (x) => (isF(x) ? NF.format(x) : "—");
+  const fmtPct = (x) => (isF(x) ? (NF2.format(x) + "%") : "—");
+  const fmt2 = (x) => (isF(x) ? NF2.format(x) : "—");
+
+  function setStatus(s){ statusTxt.textContent = s; }
+
+  /***********************
+   * SAFE FETCH (Timeout)
+   ***********************/
+  async function fetchJson(url){
+    const ctrl = new AbortController();
+    const t = setTimeout(() => ctrl.abort(), CONFIG.FETCH_TIMEOUT_MS);
+    try{
+      const r = await fetch(url, { signal: ctrl.signal });
+      if(!r.ok) throw new Error("HTTP "+r.status);
+      return await r.json();
+    } finally {
+      clearTimeout(t);
+    }
+  }
+
+  /***********************
+   * IST conversion helpers
+   ***********************/
+  const IST_OFFSET_MS = 5.5 * 3600e3;
+  function parseYMD(s){ const m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(s||""); return m?{y:+m[1],mo:+m[2],d:+m[3]}:null; }
+  function parseHM(s){ const m=/^(\d{1,2}):(\d{2})$/.exec(s||""); return m?{hh:Math.min(23,Math.max(0,+m[1])),mm:Math.min(59,Math.max(0,+m[2]))}:null; }
+  function istDayStartUtcMs(istDateStr){
+    const p=parseYMD(istDateStr); if(!p) return NaN;
+    return Date.UTC(p.y,p.mo-1,p.d,0,0,0,0) - IST_OFFSET_MS;
+  }
+  function istDateTimeToUtcMs(istDateStr, istTimeStr){
+    const p=parseYMD(istDateStr), t=parseHM(istTimeStr);
+    if(!p||!t) return NaN;
+    return Date.UTC(p.y,p.mo-1,p.d,t.hh,t.mm,0,0) - IST_OFFSET_MS;
+  }
+  function utcWindowForIst(istDateStr, istTimeStr){
+    const start = istDayStartUtcMs(istDateStr);
+    const last  = start + 24*3600e3 - 1;
+    if(!istTimeStr) return {start, end:last};
+    let end = istDateTimeToUtcMs(istDateStr, istTimeStr);
+    if(!isF(end)) end = last;
+    if(end < start) end = start;
+    if(end > last) end = last;
+    return {start, end};
+  }
+
+  const intervalMsMap = {
+    "1m":60e3,"5m":300e3,"15m":900e3,"30m":1800e3,"1h":3600e3,"2h":7200e3,
+    "4h":14400e3,"6h":21600e3,"12h":43200e3,"1d":86400e3
+  };
+
+  /***********************
+   * Core calculations
+   ***********************/
+  function compute(price, high, low){
+    const r={toHighPct:null,toLowPct:null,posPct:null,closeness:null,rangePct:null};
+    if(!(isF(price)&&isF(high)&&isF(low))) return r;
+    const range=high-low; if(!(range>0)) return r;
+    const toH=((high-price)/high)*100;
+    const toL=((price-low)/low)*100;
+    const pos=((price-low)/range)*100;
+    r.toHighPct=toH; r.toLowPct=toL; r.posPct=pos;
+    r.rangePct=((high/low)-1)*100;
+    r.closeness=Math.min(Math.max(toH,0), Math.max(toL,0));
+    return r;
+  }
+  function proxBar(posPct){
+    if(!isF(posPct)) return "";
+    const clamped = Math.max(0, Math.min(100, posPct));
+    const px = (clamped/100)*118;
+    return `<span class="bar"><i class="lo"></i><i class="hi"></i><i class="p" style="left:${px}px"></i></span>`;
+  }
+  function tradeUrl(symbol){ return `https://www.mexc.com/exchange/${encodeURIComponent(symbol)}`; }
+
+  /***********************
+   * MEXC Adapter (Spot)
+   ***********************/
+  const MEXC = {
+    name:"MEXC",
+    base:"https://api.mexc.com",
+
+    async topSymbols(n){
+      const data = await fetchJson(this.base + "/api/v3/ticker/24hr");
+      const usdt = data.filter(d => (d.symbol||"").endsWith("USDT"));
+      usdt.sort((a,b)=>(+b.quoteVolume)-(+a.quoteVolume));
+      return usdt.slice(0,n).map(d=>d.symbol);
+    },
+
+    async batchPrices(){
+      const all = await fetchJson(this.base + "/api/v3/ticker/price");
+      const map = new Map();
+      for(const it of all){ map.set(it.symbol, +it.price); }
+      return map;
+    },
+
+    async dayOHLC(sym, istDateStr){
+      const {start,end} = utcWindowForIst(istDateStr, null);
+      const a = await fetchJson(`${this.base}/api/v3/klines?symbol=${sym}&interval=1d&startTime=${start}&endTime=${end}&limit=1`);
+      if(!Array.isArray(a)||!a.length) return null;
+      return { high:+a[0][2], low:+a[0][3] };
+    },
+
+    async candleAt(sym, interval, istDateStr, istTimeStr){
+      const {end} = utcWindowForIst(istDateStr, istTimeStr);
+      const ms = intervalMsMap[interval]; if(!ms) return null;
+      const arr = await fetchJson(`${this.base}/api/v3/klines?symbol=${sym}&interval=${interval}&endTime=${end}&limit=3`);
+      if(!Array.isArray(arr)||!arr.length) return null;
+      let chosen=null;
+      for(const k of arr){
+        const o=k[0];
+        if(o<=end && end<o+ms){ chosen=k; break; }
+      }
+      if(!chosen) chosen=arr[arr.length-1];
+      return chosen ? { high:+chosen[2], low:+chosen[3] } : null;
+    }
+  };
+
+  /***********************
+   * State
+   ***********************/
+  const state = {
+    symbols: [],
+    rows: new Map(),
+    sortKey: "closeness",
+    sortDir: 1,
+    poll: null
+  };
+
+  /***********************
+   * Admin / PRO controls
+   ***********************/
+  const adminPill = $("#adminPill");
+  const topnProWrap = $("#topnProWrap");
+  const exportBtn = $("#exportCsv");
+  const proEnable = $("#proEnable");
+
+  function isAdmin(){ return localStorage.getItem(ADMIN_KEY) === "1"; }
+  function setAdmin(v){
+    localStorage.setItem(ADMIN_KEY, v ? "1" : "0");
+    refreshAdminUI();
+  }
+  function isPro(){ return localStorage.getItem(PRO_KEY) === "1"; }
+  function setPro(v){
+    localStorage.setItem(PRO_KEY, v ? "1" : "0");
+    proEnable.checked = !!v;
+    refreshAdminUI();
+  }
+
+  function refreshAdminUI(){
+    const admin = isAdmin();
+    const pro = isPro();
+
+    adminPill.classList.remove("ok","bad");
+    adminPill.classList.add(admin ? "ok" : "bad");
+    adminPill.innerHTML = admin ? `Admin: <b>Unlocked</b>` : `Admin: <b>Locked</b>`;
+
+    // PRO controls visible only when admin unlocked
+    topnProWrap.classList.toggle("hidden", !admin);
+    exportBtn.disabled = !(admin && pro);
+
+    modeTxt.textContent = (admin && pro) ? "PRO" : "FREE";
+  }
+
+  $("#adminUnlock").addEventListener("click", () => {
+    const pin = ($("#adminPin").value || "").trim();
+    if(pin === ADMIN_PIN){
+      setAdmin(true);
+      alert("Admin unlocked ✅");
+    } else {
+      alert("Wrong PIN ❌");
+    }
+    $("#adminPin").value = "";
+  });
+
+  $("#adminLock").addEventListener("click", () => {
+    setAdmin(false);
+    setPro(false);
+    alert("Admin locked 🔒");
+  });
+
+  proEnable.addEventListener("change", () => {
+    if(!isAdmin()){
+      proEnable.checked = false;
+      alert("Unlock admin first.");
+      return;
+    }
+    setPro(proEnable.checked);
+  });
+
+  /***********************
+   * Sorting + Rendering
+   ***********************/
+  function render(){
+    const q = ($("#search").value||"").trim().toUpperCase();
+    const thr = Math.max(0, parseFloat($("#threshold").value||"0")||0);
+
+    let rows = Array.from(state.rows.values()).filter(r=>{
+      if(q && !r.symbol.toUpperCase().includes(q)) return false;
+      // optional: hide rows with no data
+      return true;
+    });
+
+    rows.sort((a,b)=>{
+      const k=state.sortKey, dir=state.sortDir;
+      const av = isF(a[k]) ? a[k] : Infinity;
+      const bv = isF(b[k]) ? b[k] : Infinity;
+      return (av-bv)*dir;
+    });
+
+    const frag = document.createDocumentFragment();
+    if(!rows.length){
+      const tr=document.createElement("tr");
+      tr.innerHTML = `<td colspan="11" class="note">No rows. Click <b>Load Top</b>.</td>`;
+      frag.appendChild(tr);
+    } else {
+      for(const r of rows){
+        const near = isF(r.closeness) && r.closeness <= thr;
+        const tr=document.createElement("tr");
+        tr.innerHTML = `
+          <td>${near ? "🔥 " : ""}<strong>${r.symbol.replace("USDT","/USDT")}</strong></td>
+          <td>${fmt(r.price)}</td>
+          <td>${fmt(r.high)}</td>
+          <td>${fmt(r.low)}</td>
+          <td>${fmtPct(r.rangePct)}</td>
+          <td>${fmtPct(r.toHighPct)}</td>
+          <td>${fmtPct(r.toLowPct)}</td>
+          <td>${isF(r.closeness)?(fmt2(r.closeness)+"%"):"—"}</td>
+          <td>${isF(r.posPct)?(fmt2(r.posPct)+"%"):"—"}</td>
+          <td>${proxBar(r.posPct)}</td>
+          <td><a class="trade-btn" href="${tradeUrl(r.symbol)}" target="_blank" rel="noopener noreferrer">Trade</a></td>
+        `;
+        frag.appendChild(tr);
+      }
+    }
+
+    tbody.replaceChildren(frag);
+    rowCount.textContent = String(rows.length);
+  }
+
+  $$("thead th[data-k]").forEach(th=>{
+    th.addEventListener("click", ()=>{
+      const k=th.getAttribute("data-k");
+      if(state.sortKey===k) state.sortDir *= -1;
+      else { state.sortKey=k; state.sortDir=1; }
+
+      $$("thead th").forEach(x=>x.classList.remove("sort-asc","sort-desc"));
+      th.classList.add(state.sortDir===1 ? "sort-asc" : "sort-desc");
+      render();
+    });
+  });
+
+  $("#search").addEventListener("input", ()=>render());
+  $("#threshold").addEventListener("input", ()=>render());
+  $("#refresh").addEventListener("click", async()=>{ await loadAll(true); });
+
+  /***********************
+   * Concurrency Pool
+   ***********************/
+  async function runPool(items, worker, max){
+    let i=0;
+    const runners = Array.from({length:max}, async ()=>{
+      while(i<items.length){
+        const idx=i++;
+        await worker(items[idx], idx);
+      }
+    });
+    await Promise.all(runners);
+  }
+
+  /***********************
+   * Load Top + Load All
+   ***********************/
+  async function loadTopSymbols(){
+    const freeN = parseInt($("#topnFree").value,10) || 60;
+    const proN  = parseInt($("#topnPro").value,10) || 200;
+
+    const useProN = (isAdmin() && isPro()) ? proN : freeN;
+
+    setStatus("Loading top symbols...");
+    const syms = await MEXC.topSymbols(useProN);
+    state.symbols = syms;
+  }
+
+  function resetRows(){
+    state.rows.clear();
+    for(const sym of state.symbols){
+      state.rows.set(sym, {
+        symbol:sym,
+        price:null, high:null, low:null,
+        toHighPct:null,toLowPct:null,posPct:null,closeness:null,rangePct:null
+      });
+    }
+  }
+
+  async function loadAll(forceReloadTop=false){
+    clearInterval(state.poll);
+
+    const istDate = $("#date").value;
+    const istTime = ($("#timeIst").value||"").trim() || null;
+    const tf = $("#tfSelect").value;
+
+    if(!istDate){
+      alert("Please select Target Date.");
+      return;
+    }
+
+    try{
+      if(forceReloadTop || !state.symbols.length){
+        await loadTopSymbols();
+      }
+      resetRows();
+      render();
+
+      setStatus("Fetching prices...");
+      const priceMap = await MEXC.batchPrices();
+      for(const sym of state.symbols){
+        const r = state.rows.get(sym);
+        if(r) r.price = priceMap.get(sym) ?? null;
+      }
+      render();
+
+      setStatus("Fetching High/Low (fast pool)...");
+      const maxConc = (isAdmin() && isPro()) ? CONFIG.MAX_CONCURRENCY_PRO : CONFIG.MAX_CONCURRENCY_FREE;
+
+      await runPool(state.symbols, async (sym)=>{
+        const r = state.rows.get(sym);
+        if(!r) return;
+
+        try{
+          if(tf==="auto"){
+            // FAST: use daily OHLC for the date (best for performance)
+            const d = await MEXC.dayOHLC(sym, istDate);
+            if(d){ r.high=d.high; r.low=d.low; }
+          } else {
+            // candle at time (if no time, use 00:00)
+            const t = istTime || "00:00";
+            const c = await MEXC.candleAt(sym, tf, istDate, t);
+            if(c){ r.high=c.high; r.low=c.low; }
+            else {
+              const d = await MEXC.dayOHLC(sym, istDate);
+              if(d){ r.high=d.high; r.low=d.low; }
+            }
+          }
+
+          if(isF(r.price)&&isF(r.high)&&isF(r.low)){
+            Object.assign(r, compute(r.price,r.high,r.low));
+          }
+        } catch {
+          // ignore single symbol failures
+        }
+      }, maxConc);
+
+      render();
+      setStatus("Ready");
+
+      // REST polling for live prices
+      state.poll = setInterval(async ()=>{
+        try{
+          const pm = await MEXC.batchPrices();
+          for(const sym of state.symbols){
+            const r = state.rows.get(sym);
+            if(!r) continue;
+            const p = pm.get(sym);
+            if(isF(p)){
+              r.price=p;
+              if(isF(r.high)&&isF(r.low)) Object.assign(r, compute(r.price,r.high,r.low));
+            }
+          }
+          render();
+        } catch {}
+      }, CONFIG.REST_POLL_MS);
+
+    } catch(e){
+      console.error(e);
+      setStatus("Error (check console)");
+      tbody.innerHTML = `<tr><td colspan="11" class="note">Error loading data. Open browser console and refresh.</td></tr>`;
+    }
+  }
+
+  $("#loadTop").addEventListener("click", async()=>{
+    await loadAll(true);
+  });
+
+  /***********************
+   * Export CSV (PRO)
+   ***********************/
+  $("#exportCsv").addEventListener("click", ()=>{
+    if(!(isAdmin() && isPro())){
+      alert("Export CSV is PRO. Unlock admin + enable PRO first.");
+      return;
+    }
+    const rows = Array.from(state.rows.values());
+    const headers = ["symbol","price","high","low","rangePct","toHighPct","toLowPct","closeness","posPct"];
+    const lines = [headers.join(",")];
+
+    for(const r of rows){
+      const line = headers.map(h=>{
+        const v = r[h];
+        if(v==null) return "";
+        if(typeof v === "number") return String(v);
+        return `"${String(v).replaceAll('"','""')}"`;
+      }).join(",");
+      lines.push(line);
+    }
+
+    const blob = new Blob([lines.join("\n")], {type:"text/csv;charset=utf-8"});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "asb_scanner_export.csv";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  });
+
+  /***********************
+   * Init
+   ***********************/
+  // default date = today IST
+  const IST = new Intl.DateTimeFormat("en-CA",{ timeZone:"Asia/Kolkata", year:"numeric", month:"2-digit", day:"2-digit" });
+  $("#date").value = IST.format(new Date());
+
+  // restore saved states
+  if(localStorage.getItem(ADMIN_KEY) !== "1") localStorage.setItem(ADMIN_KEY,"0");
+  if(localStorage.getItem(PRO_KEY) !== "1") localStorage.setItem(PRO_KEY,"0");
+  proEnable.checked = isPro();
+
+  refreshAdminUI();
+
+  // hide pro TopN unless admin unlocked
+  topnProWrap.classList.toggle("hidden", !isAdmin());
+
+  // auto-load small default
+  loadAll(true);
+
+  window.addEventListener("beforeunload", ()=>{
+    clearInterval(state.poll);
+  });
+})();
+</script>
+
+</body>
+</html>
+
 
