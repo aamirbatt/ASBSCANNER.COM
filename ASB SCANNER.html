@@ -2,391 +2,187 @@
 <html lang="en">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-<title>TDP Pro — Target-Date Proximity (IST) • Sticky Header/Cols • Accum + Shooting Star Filters</title>
-
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Target-Date Proximity — Live % to High/Low • IST (12-hour) • MCap • RVOL • Timeframes • P@Target • Day Close</title>
 <style>
   :root{
-    --bg:#070b14;
-    --panel:#0f172a;
-    --panel2:#0b1426;
-    --muted:#9fb0d4;
-    --text:#e8eefc;
-    --border:#22304a;
-
-    --accent:#5eead4;
-    --accent2:#60a5fa;
-
-    --ok:#9ae6b4;
-    --warn:#ffd166;
-    --danger:#ff6b6b;
-
-    --chip:#0c1730;
-    --shadow:0 14px 40px rgba(0,0,0,.35);
+    --bg:#0b1220; --panel:#0f172a; --panel2:#0d1628;
+    --muted:#9fb0d4; --text:#e8eefc; --border:#22304a;
+    --accent:#5eead4; --ok:#9ae6b4; --warn:#ffd166; --danger:#ff6b6b;
+    --chip:#12203a; --glow:0 0 0 rgba(94,234,212,.0),0 0 0 rgba(94,234,212,.0);
   }
-
   html,body{height:100%}
-  body{
-    margin:0;
-    background:
-      radial-gradient(1200px 700px at 12% -10%, rgba(96,165,250,.18) 0, transparent 55%),
-      radial-gradient(900px 520px at 110% 10%, rgba(94,234,212,.12) 0, transparent 50%),
-      radial-gradient(1200px 600px at 10% -10%,#0d1a30 0,#0b1220 40%,#0a1020 100%);
-    color:var(--text);
-    font:14px system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
-    -webkit-font-smoothing:antialiased;
-  }
+  body{margin:0;background:radial-gradient(1200px 600px at 10% -10%,#0d1a30 0,#0b1220 40%,#0a1020 100%);color:var(--text);font:14px system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased}
   *{box-sizing:border-box}
-  .wrap{max-width:1480px;margin:20px auto;padding:0 14px}
-
-  .panel{
-    background:linear-gradient(180deg, rgba(15,23,42,.98), rgba(11,20,38,.98));
-    border:1px solid var(--border);
-    border-radius:18px;
-    padding:14px;
-    box-shadow:var(--shadow);
-  }
-
-  .topline{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap}
-  h1{margin:0;font-size:18px;letter-spacing:.2px}
-  .subtitle{color:var(--muted);font-size:12px}
-
+  .wrap{max-width:1320px;margin:22px auto;padding:0 14px}
+  .panel{background:linear-gradient(180deg,var(--panel),var(--panel2));border:1px solid var(--border);border-radius:18px;padding:12px 14px;box-shadow:0 10px 30px rgba(0,0,0,.25)}
   .row{display:flex;flex-wrap:wrap;gap:10px;align-items:end}
   .col{display:flex;flex-direction:column;gap:6px;min-width:160px}
-  .col.wide{min-width:260px}
+  h2{font-weight:700;letter-spacing:.2px;margin:0}
   label{font-size:12px;color:var(--muted)}
-  input,select,button{
-    background:#0c1426;color:var(--text);
-    border:1px solid var(--border);
-    border-radius:12px;
-    padding:8px 10px;min-height:38px;
-    outline:none;
-    transition:border-color .15s ease, transform .06s ease, box-shadow .15s ease;
-  }
-  input:focus,select:focus{
-    border-color:#355080;
-    box-shadow:0 0 0 3px rgba(53,80,128,.22);
-  }
+  input,select,button{background:#0c1426;color:var(--text);border:1px solid var(--border);border-radius:12px;padding:8px 10px;min-height:36px;outline:none;transition:border-color .15s ease, transform .05s ease}
+  input:focus,select:focus{border-color:#355080;box-shadow:0 0 0 3px rgba(53,80,128,.22)}
   button{cursor:pointer;user-select:none}
-  .btn{
-    background:linear-gradient(90deg,#1b2a44,#17354a);
-    border-color:#2b3b5a;
-    box-shadow:0 8px 18px rgba(0,0,0,.25);
-  }
-  .btn:hover{transform:translateY(-1px)}
-  .btn:active{transform:translateY(0)}
-  .btn.ghost{background:transparent;border-color:#2b3b5a;box-shadow:none}
-
-  .pill{
-    padding:4px 8px;border-radius:999px;border:1px solid var(--border);
-    font-size:12px;display:inline-flex;align-items:center;gap:6px;
-    background:rgba(12,23,48,.85);
-  }
-  .pill.bull{background:rgba(16,61,39,.55);border-color:#2b6b46;color:var(--ok)}
-  .pill.bear{background:rgba(61,16,16,.55);border-color:#6b2b2b;color:#ff8b8b}
-  .pill.doji{background:rgba(61,49,16,.55);border-color:#6b5a2b;color:var(--warn)}
-  .pill.neu{background:rgba(20,33,61,.55);border-color:#2b3d6b;color:#b7c8ff}
-  .pill.tag{background:rgba(94,234,212,.08);border-color:rgba(94,234,212,.35);color:#bff7f0}
-
-  /* ✅ Quick chips */
-  .chips{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
-  .chipbtn{
-    appearance:none;
-    border:1px solid var(--border);
-    background:rgba(12,20,38,.75);
-    color:var(--text);
-    padding:8px 10px;
-    border-radius:999px;
-    line-height:1;
-    font-size:12px;
-    cursor:pointer;
-    transition:transform .06s ease, border-color .15s ease, box-shadow .15s ease, background .15s ease;
-  }
-  .chipbtn:hover{transform:translateY(-1px);border-color:#355080}
-  .chipbtn:active{transform:translateY(0)}
-  .chipbtn.active{
-    border-color:rgba(94,234,212,.55);
-    background:rgba(94,234,212,.10);
-    box-shadow:0 0 0 3px rgba(94,234,212,.12);
-  }
-  .chipbtn.danger.active{border-color:rgba(255,107,107,.55);background:rgba(255,107,107,.10);box-shadow:0 0 0 3px rgba(255,107,107,.10)}
-  .chipbtn.warn.active{border-color:rgba(255,209,102,.55);background:rgba(255,209,102,.10);box-shadow:0 0 0 3px rgba(255,209,102,.10)}
-  .chipbtn.ok.active{border-color:rgba(154,230,180,.55);background:rgba(154,230,180,.10);box-shadow:0 0 0 3px rgba(154,230,180,.10)}
-  .chipbtn.blue.active{border-color:rgba(96,165,250,.65);background:rgba(96,165,250,.10);box-shadow:0 0 0 3px rgba(96,165,250,.10)}
-  .chipsep{width:1px;height:22px;background:rgba(34,48,74,.9);margin:0 4px}
-
-  .note{color:var(--muted);font-size:12px;line-height:1.35}
-  .stats{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+  .btn{background:linear-gradient(90deg,#1b2a44,#17354a);border-color:#2b3b5a;box-shadow:0 6px 16px rgba(0,0,0,.25)}
+  .btn:hover{transform:translateY(-1px)} .btn:active{transform:translateY(0)}
+  .pill{padding:4px 8px;border-radius:999px;border:1px solid var(--border);font-size:12px;display:inline-flex;align-items:center;gap:6px;background:var(--chip)}
+  .note{color:var(--muted);font-size:12px}
+  .stats{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
   .stat{padding:6px 10px;border-radius:999px;border:1px solid var(--border);font-size:12px;background:#0c1426}
-
-  .grid{
-    margin-top:12px;
-    border:1px solid var(--border);
-    border-radius:18px;
-    overflow:auto;
-    height:56vh;
-    box-shadow:0 8px 18px rgba(0,0,0,.18) inset;
-  }
-
-  table{width:100%;border-collapse:separate;border-spacing:0;min-width:2000px}
-  thead th{
-    position:sticky;top:0;
-    background:linear-gradient(180deg,#111b2e,#0f172a);
-    border-bottom:1px solid var(--border);
-    z-index:5;
-    font-weight:700;color:#cbd5f1;
-    backdrop-filter:blur(6px);
-  }
+  .grid{margin-top:12px;border:1px solid var(--border);border-radius:18px;overflow:auto;height:54vh}
+  table{width:100%;border-collapse:separate;border-spacing:0}
+  thead th{position:sticky;top:0;background:linear-gradient(180deg,#111b2e,#0f172a);border-bottom:1px solid var(--border);z-index:2;font-weight:700;color:#cbd5f1;backdrop-filter:blur(4px)}
   th,td{padding:10px;text-align:right;white-space:nowrap}
   th:first-child,td:first-child{text-align:left}
-  th:nth-child(2),td:nth-child(2){text-align:left}
-
   tbody tr:nth-child(odd){background:#0c1426}
   tbody tr:hover{background:#0e1830}
-
   thead th[data-k]{cursor:pointer;user-select:none;position:relative}
-  thead th[data-k]::after{
-    content:"";
-    position:absolute;right:8px;top:50%;
-    width:8px;height:8px;border-right:2px solid #6aa7a0;border-bottom:2px solid #6aa7a0;
-    opacity:.35;transform:translateY(-50%) rotate(-45deg)
-  }
+  thead th[data-k]::after{content:"";position:absolute;right:8px;top:50%;width:8px;height:8px;border-right:2px solid #6aa7a0;border-bottom:2px solid #6aa7a0;opacity:.35;transform:translateY(-50%) rotate(-45deg)}
   thead th.sort-asc::after{opacity:.9;transform:translateY(-50%) rotate(-135deg)}
   thead th.sort-desc::after{opacity:.9;transform:translateY(-50%) rotate(45deg)}
-
-  /* Sticky first 2 columns */
-  th.sticky-1, td.sticky-1{position:sticky;left:0;z-index:6}
-  th.sticky-2, td.sticky-2{position:sticky;left:140px;z-index:6}
-  thead th.sticky-1, thead th.sticky-2{z-index:10}
-  td.sticky-1, td.sticky-2{background:rgba(12,20,38,.98)}
-  tbody tr:nth-child(odd) td.sticky-1, tbody tr:nth-child(odd) td.sticky-2{background:rgba(12,20,38,.98)}
-  tbody tr:hover td.sticky-1, tbody tr:hover td.sticky-2{background:#0e1830}
-  th.sticky-1, td.sticky-1{min-width:140px;max-width:140px}
-  th.sticky-2, td.sticky-2{min-width:180px;max-width:180px}
-
-  .bar{
-    width:120px;height:8px;border-radius:999px;background:#0c1426;border:1px solid var(--border);
-    position:relative;display:inline-block;overflow:hidden
-  }
+  .bar{width:120px;height:8px;border-radius:999px;background:#0c1426;border:1px solid var(--border);position:relative;display:inline-block;overflow:hidden}
   .bar>i{position:absolute;top:-3px;width:2px;height:14px;background:#6dd6c8;border-radius:1px}
-  .bar .lo{left:0}.bar .hi{right:0}.bar .p{background:var(--ok)}
-
+  .bar .lo{left:0}.bar .hi{right:0}.bar .p{background:var(--ok);box-shadow:var(--glow)}
+  @keyframes ping{0%{box-shadow:0 0 0 0 rgba(154,230,180,.35)}100%{box-shadow:0 0 0 10px rgba(154,230,180,0)}}
+  .ping{animation:ping .9s cubic-bezier(.2,.7,.2,1) 1}
   .recs{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}
-  .card{
-    background:linear-gradient(180deg, rgba(15,23,42,.98), rgba(11,20,38,.98));
-    border:1px solid var(--border);
-    border-radius:16px;
-    padding:10px;
-    min-height:160px;
-    position:relative;
-    overflow:hidden
-  }
-  .card h3{margin:0 0 6px;font-size:13px}
-  .card:before{
-    content:"";position:absolute;inset:-40% -40% auto auto;width:120%;height:120%;
-    background:radial-gradient(300px 120px at right -40px top -40px, rgba(94,234,212,.07), transparent 60%);
-    pointer-events:none
-  }
+  .card{background:linear-gradient(180deg,var(--panel),var(--panel2));border:1px solid var(--border);border-radius:16px;padding:10px;min-height:160px;position:relative;overflow:hidden}
+  .card:before{content:"";position:absolute;inset:-40% -40% auto auto;width:120%;height:120%;background:radial-gradient(300px 120px at right -40px top -40px, rgba(94,234,212,.07), transparent 60%);pointer-events:none}
   .rec-list{max-height:22vh;overflow:auto}
   .rec-item{display:flex;justify-content:space-between;border-bottom:1px dashed #22304a;padding:8px 0;gap:8px}
   .rec-item:last-child{border-bottom:none}
-
   .skel{background:linear-gradient(90deg,#0f172a 25%,#13203a 37%,#0f172a 63%);background-size:400% 100%;animation:shimmer 1.2s ease-in-out infinite}
   @keyframes shimmer{0%{background-position:100% 0}100%{background-position:-100% 0}}
 
-  @media (max-width: 980px){
-    .recs{grid-template-columns:1fr}
-    .grid{height:58vh}
-    th.sticky-2, td.sticky-2{left:120px}
-    th.sticky-1, td.sticky-1{min-width:120px;max-width:120px}
-  }
+  .pill.bull{background:rgba(16,61,39,.55);border-color:#2b6b46;color:#9ae6b4}
+  .pill.bear{background:rgba(61,16,16,.55);border-color:#6b2b2b;color:#ff7b7b}
+  .pill.doji{background:rgba(61,49,16,.55);border-color:#6b5a2b;color:#ffd166}
+
+  @media (max-width: 980px){.recs{grid-template-columns:1fr}.grid{height:56vh}}
 </style>
 </head>
-
 <body>
 <div class="wrap">
   <div class="panel">
-    <div class="topline">
-      <div>
-        <h1>TDP Pro <span class="subtitle">— Sticky header + sticky first 2 columns • Accum + Shooting Star + P@Target</span></h1>
-        <div class="note">Binance: WebSocket live • MEXC Spot: REST polling • All timestamps shown in IST (12-hour).</div>
-      </div>
-      <div class="row" style="align-items:center">
-        <button id="refresh" class="btn">Refresh</button>
-        <button id="ptCompute" class="btn ghost" title="Fetch exact 1-minute close at Target Time (IST)">Get P@Target (1m)</button>
-        <button id="patternsBtn" class="btn ghost" title="Compute Accumulation + Multi-TF Shooting Star">Compute Patterns</button>
-      </div>
+    <div class="row" style="align-items:center;justify-content:space-between">
+      <h2>Target-Date Proximity <span class="note">— live % to Timeframe High/Low + P@Target (IST, 12-hour) + Day Close Dir</span></h2>
+      <div class="row"><button id="refresh" class="btn" data-sound="click">Refresh</button></div>
     </div>
 
-    <div class="row" style="margin-top:10px">
-      <div class="col"><label>Target Date (IST day)</label><input type="date" id="date"></div>
-      <div class="col"><label>Target Time (IST, optional)</label><input type="time" id="timeIst" step="60"></div>
-
+    <div class="row" style="margin-top:6px">
+      <div class="col"><label>Target Date (IST day)</label><input type="date" id="date" data-sound="click"></div>
+      <div class="col"><label>Target Time (IST, input 24h; displayed 12h)</label><input type="time" id="timeIst" step="60" data-sound="click"></div>
       <div class="col">
-        <label>Timeframe (for TF High/Low)</label>
-        <select id="tfSelect">
+        <label>Timeframe (single candle)</label>
+        <select id="tfSelect" data-sound="click">
           <option value="auto" selected>Auto (whole day / to time)</option>
           <option value="15m">15m</option><option value="30m">30m</option>
           <option value="1h">1h</option><option value="2h">2h</option>
-          <option value="4h">4h</option><option value="6h">6h</option>
-          <option value="8h">8h</option><option value="12h">12h</option>
+          <option value="4h">4h</option>
+          <option value="6h">6h</option>
+          <option value="8h">8h</option>
+          <option value="12h">12h</option>
           <option value="1d">1d</option>
+          <option value="3d">3d</option>
+          <option value="1w">1w</option>
         </select>
       </div>
-
       <div class="col">
         <label>Market</label>
-        <select id="marketType">
+        <select id="marketType" data-sound="click">
           <option value="spot" selected>Spot</option>
           <option value="perp">Perpetual (USDT-M)</option>
         </select>
       </div>
-
-      <div class="col wide">
+      <div class="col" style="min-width:260px">
         <label>Exchanges</label>
         <div class="row" style="gap:8px;align-items:center">
-          <label class="pill"><input type="checkbox" class="exch" value="binance" checked style="accent-color:#4fd1c5"> Binance</label>
-          <label class="pill"><input type="checkbox" class="exch" value="mexc" style="accent-color:#4fd1c5"> MEXC (spot)</label>
+          <label class="pill"><input type="checkbox" class="exch" value="binance" checked style="accent-color:#4fd1c5" data-sound="tick"> Binance</label>
+          <label class="pill"><input type="checkbox" class="exch" value="mexc" style="accent-color:#4fd1c5" data-sound="tick"> MEXC (spot)</label>
         </div>
       </div>
-
       <div class="col"><label>Top N / exchange</label>
-        <select id="topn">
-          <option>20</option><option>60</option><option>100</option><option>200</option><option>300</option><option selected>500</option>
-        </select>
+        <select id="topn" data-sound="click"><option>20</option><option>60</option><option>100</option><option>200</option><option>300</option><option selected>500</option></select>
       </div>
-      <div class="col"><label>&nbsp;</label><button id="loadTop" class="btn">Load Top</button></div>
-      <div class="col" style="flex:1;min-width:240px"><label>Quick search</label><input id="search" placeholder="Filter (BTC, ETH, Binance, Spot/Perp…)"></div>
+      <div class="col"><label> </label><button id="loadTop" class="btn" data-sound="click">Load Top</button></div>
+      <div class="col" style="flex:1;min-width:240px"><label>Quick search</label><input id="search" placeholder="Filter (e.g., BTC, ETH, Binance)…"></div>
     </div>
 
-    <div class="row" style="margin-top:10px">
-      <div class="col"><label>Near HL threshold (%)</label><input type="number" id="threshold" value="0.25" step="0.01" min="0"></div>
-      <div class="col"><label>Max closeness % (optional override)</label><input type="number" id="maxClose" placeholder="e.g. 0.20" step="0.01" min="0"></div>
-
-      <div class="col">
-        <label>Target Price (optional)</label>
-        <input type="number" id="targetPrice" placeholder="If set: used for % to SS (else P@Target/Live)" step="0.0001" min="0">
-      </div>
-
-      <div class="col">
-        <label>Filter: Only near P@Target</label>
-        <label class="pill"><input type="checkbox" id="ptOnlyNear" style="accent-color:#4fd1c5;margin-right:6px"> Enabled</label>
-      </div>
-      <div class="col"><label>Near P@Target thr (%)</label><input type="number" id="ptThr" value="0.25" step="0.01" min="0"></div>
+    <div class="row" style="margin-top:6px">
+      <div class="col"><label>Near High/Low threshold (%)</label><input type="number" id="threshold" value="0.25" step="0.01" min="0" data-sound="tick"></div>
+      <div class="col"><label>Max Closeness % (optional)</label><input type="number" id="maxClose" placeholder="e.g. 0.20" step="0.01" min="0" data-sound="tick"></div>
+      <div class="col"><label>Recent touches lookback (hrs)</label><input type="number" id="lookbackHrs" value="24" min="1" step="1" data-sound="tick"></div>
+      <div class="col"><label>Only show recent touches</label><label class="pill"><input type="checkbox" id="filterRecent" style="margin-right:6px;accent-color:#4fd1c5" data-sound="tick"> Enabled</label></div>
+      <div class="col"><label> </label><button id="scanRecentBtn" class="btn" data-sound="click">Scan Recent Touches</button></div>
     </div>
 
-    <div class="row" style="margin-top:10px">
-      <div class="col">
-        <label>Accum timeframe</label>
-        <select id="patternTf">
-          <option value="15m">15m</option>
-          <option value="30m">30m</option>
-          <option value="1h" selected>1h</option>
-          <option value="2h">2h</option>
-          <option value="4h">4h</option>
-          <option value="6h">6h</option>
-          <option value="12h">12h</option>
-          <option value="1d">1d</option>
-        </select>
-      </div>
-
-      <div class="col wide">
-        <label>Shooting Star timeframes (multi-TF)</label>
-        <div class="row" style="gap:8px;align-items:center">
-          <label class="pill"><input type="checkbox" class="ssTf" value="15m" checked style="accent-color:#4fd1c5"> 15m</label>
-          <label class="pill"><input type="checkbox" class="ssTf" value="30m" style="accent-color:#4fd1c5"> 30m</label>
-          <label class="pill"><input type="checkbox" class="ssTf" value="1h" checked style="accent-color:#4fd1c5"> 1h</label>
-          <label class="pill"><input type="checkbox" class="ssTf" value="2h" style="accent-color:#4fd1c5"> 2h</label>
-          <label class="pill"><input type="checkbox" class="ssTf" value="4h" checked style="accent-color:#4fd1c5"> 4h</label>
-          <label class="pill"><input type="checkbox" class="ssTf" value="6h" style="accent-color:#4fd1c5"> 6h</label>
-          <label class="pill"><input type="checkbox" class="ssTf" value="12h" style="accent-color:#4fd1c5"> 12h</label>
-          <label class="pill"><input type="checkbox" class="ssTf" value="1d" style="accent-color:#4fd1c5"> 1d</label>
-        </div>
-      </div>
-
-      <div class="col"><label>Accum LB candles</label><input type="number" id="accLB" value="20" min="5" max="80" step="1"></div>
-      <div class="col"><label>Accum vol mult</label><input type="number" id="accVM" value="1.2" min="0.8" max="5" step="0.1"></div>
-      <div class="col"><label>SS scanback candles / TF</label><input type="number" id="ssLB" value="120" min="30" max="300" step="10"></div>
+    <div class="row" style="margin-top:6px">
+      <div class="col"><label>Min RVOL (× average)</label><input type="number" id="rvolMin" value="1.5" step="0.1" min="0" data-sound="tick"></div>
+      <div class="col"><label>RVOL lookback (days)</label><input type="number" id="rvolDays" value="20" step="1" min="5" max="60" data-sound="tick"></div>
+      <div class="col"><label>Filter by RVOL</label><label class="pill"><input type="checkbox" id="rvolOnly" style="margin-right:6px;accent-color:#4fd1c5" data-sound="tick"> Enabled</label></div>
+      <div class="col"><label> </label><button id="rvolCompute" class="btn" data-sound="click">Compute RVOL</button></div>
     </div>
 
-    <!-- Filters -->
-    <div class="row" style="margin-top:10px">
-      <div class="col">
-        <label>Accum filter</label>
-        <select id="accFilter">
-          <option value="any" selected>Any</option>
-          <option value="accum">Accumulation only</option>
-          <option value="distrib">Distribution only</option>
-          <option value="neutral">Neutral only</option>
-          <option value="nonneutral">Accum + Distrib only</option>
+    <div class="row" style="margin-top:6px">
+      <div class="col"><label>Market Cap preset</label>
+        <select id="mcPreset" data-sound="click">
+          <option value="">— Any —</option><option value="200000000">≥ 200M</option><option value="500000000">≥ 500M</option><option value="1000000000">≥ 1B</option><option value="5000000000">≥ 5B</option>
         </select>
       </div>
+      <div class="col"><label>M.Cap ≥ (USD)</label><input type="number" id="mcMin" placeholder="enter any number" data-sound="tick"></div>
+      <div class="col"><label>M.Cap ≤ (USD)</label><input type="number" id="mcMax" placeholder="(blank = no max)" data-sound="tick"></div>
+      <div class="col"><label>CoinGecko mapping</label><button id="mcFetch" class="btn" data-sound="click">Fetch Market Caps</button></div>
+    </div>
 
-      <div class="col">
-        <label>Shooting Star filter</label>
-        <select id="ssFilter">
-          <option value="any" selected>Any</option>
-          <option value="ssNow">SS @Target only</option>
-          <option value="hasLast">Has Last SS</option>
-          <option value="within">Last SS within (hrs)</option>
-          <option value="none">No SS found</option>
-        </select>
-      </div>
-
-      <div class="col"><label>Last SS within (hrs)</label><input type="number" id="ssWithinHrs" value="48" min="1" step="1"></div>
-
-      <div class="col wide" style="flex:1">
-        <label>Quick Filters (1-click chips)</label>
-        <div class="chips" id="chips">
-          <!-- built by JS -->
-        </div>
-      </div>
+    <div class="row" style="margin-top:6px">
+      <div class="col"><label>Compute P@Target (exact 1-min at time)</label><label class="pill"><input type="checkbox" id="ptOnlyNear" style="margin-right:6px;accent-color:#4fd1c5"> Only show near @Time</label></div>
+      <div class="col"><label>Near @Time threshold (%)</label><input type="number" id="ptThr" value="0.25" step="0.01" min="0"></div>
+      <div class="col"><label> </label><button id="ptCompute" class="btn" data-sound="click">Get P@Target (1m)</button></div>
     </div>
 
     <div class="stats">
-      <span class="stat">Visible rows: <strong id="rowCount">0</strong></span>
-      <span class="stat">All rows loaded: <strong id="allCount">0</strong></span>
+      <span class="stat">Rows: <strong id="rowCount">0</strong></span>
       <span class="stat">Live sockets: <strong id="wsCount">0</strong></span>
+      <span class="stat">MC known: <strong id="mcKnown">0</strong></span>
+      <span class="stat">RVOL computed: <strong id="rvKnown">0</strong></span>
       <span class="stat">P@Target known: <strong id="ptKnown">0</strong></span>
-      <span class="stat">Patterns computed: <strong id="patKnown">0</strong></span>
       <span class="stat">Status: <strong id="statusTxt">Idle</strong></span>
     </div>
 
-    <p class="note" style="margin-top:10px">
-      Tip: Click chips like <b>SS@Target</b>, <b>LastSS&lt;24h</b>, <b>Accum</b>, <b>Near P@Target</b>. Use <b>Reset Filters</b> to go back to “Any”.
+    <p class="note" style="margin-top:6px">
+      <b>How it works:</b> The timeframe you choose (e.g., <b>1h</b>) picks the single candle that contains your Target Time (IST) on that date and shows that candle’s <b>High/Low</b> and range. “P@Target” is the exact <b>1-minute</b> price at your time. “Day Close” reads the <b>daily</b> (1d) candle for your Target Date and marks
+      <span class="pill bull">Bullish</span>, <span class="pill bear">Bearish</span>, or <span class="pill doji">Doji</span> by comparing Close vs Open.<br>
+      % to High = ((High − Price)/High)×100 • % to Low = ((Price − Low)/Low)×100 • <b>Closeness %</b> = min(% to High, % to Low). • <b>% to P@Target</b> = |Price − P@Target| ÷ P@Target × 100.
     </p>
   </div>
 
   <div class="grid">
-    <table id="tbl">
+    <table id="tbl" aria-live="polite">
       <thead>
         <tr>
-          <th class="sticky-1" data-k="exchangeName">Exchange</th>
-          <th class="sticky-2" data-k="symbol">Symbol</th>
-
+          <th data-k="exchange">Exchange</th>
+          <th data-k="symbol">Symbol</th>
           <th data-k="market">Market</th>
           <th data-k="price">Live Price</th>
-
           <th data-k="high">TF High</th>
           <th data-k="low">TF Low</th>
+          <th data-k="rangePct">%(Hi↔Low)</th>
           <th data-k="toHighPct">% to High</th>
           <th data-k="toLowPct">% to Low</th>
           <th data-k="closeness">Closeness %</th>
           <th data-k="posPct">Position %</th>
-          <th data-k="bar">Proximity</th>
 
+          <!-- MOVED HERE: Day Close column immediately to the right of Position % -->
+          <th data-k="daydir">Day Close</th>
+
+          <th data-k="bar">Proximity</th>
           <th data-k="pAt">P@Target</th>
           <th data-k="toPtPct">% to P@Target</th>
-
-          <th data-k="accType">Accum</th>
-          <th data-k="accScore">Acc Score</th>
-
-          <th data-k="ssNow">SS @Target</th>
-          <th data-k="ssNowTf">SS @Target TF</th>
-          <th data-k="ssLastTs">Last SS (IST)</th>
-          <th data-k="ssTf">Last SS TF</th>
-
-          <th data-k="toSsPct">% to SS</th>
+          <th data-k="rvol">RVOL</th>
+          <th data-k="qvol24h">24h $Vol</th>
+          <th data-k="avgQVol">Avg $Vol (N)</th>
+          <th data-k="mcap">M.Cap (USD)</th>
+          <th data-k="date">Candle (IST)</th>
         </tr>
       </thead>
       <tbody id="tbody">
@@ -396,133 +192,148 @@
   </div>
 
   <div class="recs">
-    <div class="card"><h3>Breakout radar — Near High</h3><div id="recHigh" class="rec-list"></div></div>
-    <div class="card"><h3>Mean-revert radar — Near Low</h3><div id="recLow" class="rec-list"></div></div>
-    <div class="card"><h3>Pattern radar — Shooting Star / Accum</h3><div id="recTouch" class="rec-list"></div></div>
+    <div class="card"><h3 style="margin:0 0 6px">Breakout radar — Near High</h3><div id="recHigh" class="rec-list"></div></div>
+    <div class="card"><h3 style="margin:0 0 6px">Mean-revert radar — Near Low</h3><div id="recLow" class="rec-list"></div></div>
+    <div class="card"><h3 style="margin:0 0 6px">Recent Touches (≤ lookback, IST)</h3><div id="recTouch" class="rec-list"></div></div>
   </div>
+
+  <p class="note" style="margin-top:10px">Binance: WebSocket live. MEXC Spot: REST polling. M.Cap: CoinGecko best-effort symbol match. All times shown in IST (12-hour).</p>
 </div>
 
 <script>
 (function(){
+  // --- sound (simple) ---
+  let audioCtx=null; const prefersReduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function beep({freq=520,dur=70,type='triangle',vol=0.08}={}){ try{ audioCtx ||= new (window.AudioContext||window.webkitAudioContext)(); }catch(_){return}
+    const t=audioCtx.currentTime,o=audioCtx.createOscillator(),g=audioCtx.createGain();o.type=type;o.frequency.value=freq;
+    g.gain.setValueAtTime(0.0001,t);g.gain.linearRampToValueAtTime(vol,t+.01);g.gain.exponentialRampToValueAtTime(0.0001,t+dur/1e3);
+    o.connect(g).connect(audioCtx.destination);o.start(t);o.stop(t+dur/1e3)}
+  const play={click:()=>beep(),sort:()=>beep({freq:640,dur:60,type:'sine'}),done:()=>{beep({freq:660});setTimeout(()=>beep({freq:990}),60)}};
+  new MutationObserver(()=>document.querySelectorAll('[data-sound]').forEach(el=>el.onclick=()=>{if(!prefersReduced)play[el.dataset.sound]?.()})).observe(document.documentElement,{subtree:true,childList:true});
+
+  // --- DOM refs ---
   const $=q=>document.querySelector(q), $$=q=>Array.from(document.querySelectorAll(q));
-  const tbody=$("#tbody"), rowCount=$("#rowCount"), allCount=$("#allCount"), wsCount=$("#wsCount"), statusTxt=$("#statusTxt");
-  const ptKnown=$("#ptKnown"), patKnown=$("#patKnown");
-  const recHigh=$("#recHigh"), recLow=$("#recLow"), recTouch=$("#recTouch");
+  const tbody=$("#tbody"), rowCount=$("#rowCount"), wsCount=$("#wsCount"), statusTxt=$("#statusTxt");
+  const mcKnown=$("#mcKnown"), recHigh=$("#recHigh"), recLow=$("#recLow"), recTouch=$("#recTouch");
+  const rvKnown=$("#rvKnown"), ptKnown=$("#ptKnown");
 
+  const NF=new Intl.NumberFormat(undefined,{maximumFractionDigits:2});
+  const NF3=new Intl.NumberFormat(undefined,{maximumFractionDigits:3});
+  const NFi0=new Intl.NumberFormat(undefined,{maximumFractionDigits:0});
   const isF=x=>Number.isFinite(x);
-  const fmtN=(x,dp=3)=> isF(x)? (Math.abs(x)>=1000? x.toLocaleString(undefined,{maximumFractionDigits:2}):(+x).toFixed(dp)):"—";
-  const fmtPct=x=> isF(x)? x.toFixed(3)+"%":"—";
+  const fmtN=(x,dp=3)=> isF(x)? (Math.abs(x)>=1000? NF.format(x):(+x).toFixed(dp)):"—";
+  const fmtPct=x=> isF(x)? NF3.format(x)+"%":"—";
+  const fmtInt=x=> isF(x)? NFi0.format(x):"—";
 
-  const IST_OFFSET_MS = 5.5 * 3600e3;
+  // =========================================================
+  // TIME FIX (IST correctness + 12-hour display)
+  // =========================================================
+  const IST_OFFSET_MS = 5.5 * 3600e3; // fixed (no DST)
   const IST_TZ = "Asia/Kolkata";
-  const IST_DT_FMT_12H = new Intl.DateTimeFormat("en-US", {
-    timeZone: IST_TZ, year:"numeric", month:"2-digit", day:"2-digit",
-    hour:"numeric", minute:"2-digit", hour12:true
-  });
-  const IST_DATE_FMT = new Intl.DateTimeFormat("en-CA", { timeZone: IST_TZ, year:"numeric", month:"2-digit", day:"2-digit" });
-  function toIST12(ms){ return isF(ms)? (IST_DT_FMT_12H.format(new Date(ms))+" IST"):"—"; }
-  function istDateLabelFromMs(ms){ return isF(ms)? IST_DATE_FMT.format(new Date(ms)):""; }
 
-  function parseYMD(dateStr){ const m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(dateStr||""); return m?{y:+m[1],mo:+m[2],d:+m[3]}:null; }
-  function parseHM(timeStr){ if(!timeStr) return null; const m=/^(\d{1,2}):(\d{2})$/.exec(timeStr); return m?{hh:+m[1],mm:+m[2]}:null; }
+  const IST_DATE_FMT = new Intl.DateTimeFormat("en-CA", { // YYYY-MM-DD
+    timeZone: IST_TZ, year:"numeric", month:"2-digit", day:"2-digit"
+  });
+
+  const IST_DT_FMT_12H = new Intl.DateTimeFormat("en-US", {
+    timeZone: IST_TZ,
+    year:"numeric", month:"2-digit", day:"2-digit",
+    hour:"numeric", minute:"2-digit",
+    hour12:true
+  });
+
+  function parseYMD(dateStr){
+    const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(dateStr||"");
+    if(!m) return null;
+    return {y:+m[1], mo:+m[2], d:+m[3]};
+  }
+  function parseHM(timeStr){
+    if(!timeStr) return null;
+    const m = /^(\d{1,2}):(\d{2})$/.exec(timeStr);
+    if(!m) return null;
+    let hh = Math.max(0, Math.min(23, +m[1]));
+    let mm = Math.max(0, Math.min(59, +m[2]));
+    return {hh, mm};
+  }
   function istDayStartUtcMs(istDateStr){
     const p=parseYMD(istDateStr); if(!p) return NaN;
-    return Date.UTC(p.y,p.mo-1,p.d,0,0,0,0) - IST_OFFSET_MS;
+    const utcMidnightAsIf = Date.UTC(p.y, p.mo-1, p.d, 0, 0, 0, 0);
+    return utcMidnightAsIf - IST_OFFSET_MS;
   }
   function istDateTimeToUtcMs(istDateStr, istTimeStr){
-    const p=parseYMD(istDateStr), t=parseHM(istTimeStr);
-    if(!p||!t) return NaN;
-    return Date.UTC(p.y,p.mo-1,p.d,t.hh,t.mm,0,0) - IST_OFFSET_MS;
+    const p=parseYMD(istDateStr); const t=parseHM(istTimeStr);
+    if(!p || !t) return NaN;
+    const utcAsIf = Date.UTC(p.y, p.mo-1, p.d, t.hh, t.mm, 0, 0);
+    return utcAsIf - IST_OFFSET_MS;
   }
-  function endpointUtcMs(){
-    const dateStr=($("#date").value||"").trim();
-    const timeStr=($("#timeIst").value||"").trim();
-    if(!dateStr) return Date.now();
-    if(timeStr){
-      const v=istDateTimeToUtcMs(dateStr,timeStr);
-      return isF(v)?v:Date.now();
+  function toIST12(ms){
+    if(!isF(ms)) return "—";
+    const parts = IST_DT_FMT_12H.formatToParts(new Date(ms));
+    const get = (type)=> (parts.find(p=>p.type===type)?.value || "");
+    const MM=get("month"), DD=get("day"), YY=get("year");
+    const hh=get("hour"), mm=get("minute"), ap=get("dayPeriod");
+    return `${YY}-${MM}-${DD} ${hh}:${mm} ${ap} IST`;
+  }
+  function istDateLabelFromMs(ms){
+    if(!isF(ms)) return "—";
+    return IST_DATE_FMT.format(new Date(ms)); // YYYY-MM-DD in IST
+  }
+
+  function utcWindowForIst(istDateStr, istTimeStr){
+    const start = istDayStartUtcMs(istDateStr);
+    const last  = start + 24*3600e3 - 1;
+    if(!istTimeStr){
+      return { start, end:last, endISO:new Date(last).toISOString() };
     }
-    const start=istDayStartUtcMs(dateStr);
-    return start + 24*3600e3 - 1;
+    let end = istDateTimeToUtcMs(istDateStr, istTimeStr);
+    if(!isF(end)) end = last;
+    if(end < start) end = start;
+    if(end > last) end = last;
+    return { start, end, endISO:new Date(end).toISOString() };
   }
 
-  const intervalMsMap={"1m":60e3,"3m":180e3,"5m":300e3,"15m":900e3,"30m":1800e3,"1h":3600e3,"2h":7200e3,"4h":14400e3,"6h":21600e3,"8h":28800e3,"12h":43200e3,"1d":86400e3};
+  function timeLabelISTForWindow(istDateStr, istTimeStr){
+    if(istTimeStr){
+      const end = istDateTimeToUtcMs(istDateStr, istTimeStr);
+      return `${istDateStr} ${toIST12(end).split(" ").slice(1).join(" ")}`; // uses 12h
+    }
+    const end = istDayStartUtcMs(istDateStr) + 24*3600e3 - 1;
+    return `${istDateStr} ${toIST12(end).split(" ").slice(1).join(" ")}`;
+  }
 
+  const intervalMsMap={"1m":60e3,"3m":180e3,"5m":300e3,"15m":900e3,"30m":1800e3,"1h":3600e3,"2h":7200e3,"4h":14400e3,"6h":21600e3,"8h":28800e3,"12h":43200e3,"1d":86400e3,"3d":259200e3,"1w":604800e3};
+
+  function candleIstLabel(openMs, interval){
+    if(!isF(openMs)) return "—";
+    const ms = intervalMsMap[interval] || 0;
+    const a = toIST12(openMs);
+    const b = toIST12(openMs + Math.max(0, ms-1));
+    return `${interval} • ${a} → ${b}`;
+  }
+
+  // --- calc helpers ---
   function compute(price,high,low){
-    const r={toHighPct:null,toLowPct:null,posPct:null,closeness:null};
+    const r={toHighPct:null,toLowPct:null,posPct:null,closer:"—",closeness:null,rangePct:null};
     if(!(isF(price)&&isF(high)&&isF(low))) return r;
     const range=high-low; if(!(range>0)) return r;
     const toH=((high-price)/high)*100, toL=((price-low)/low)*100, pos=((price-low)/range)*100;
-    r.toHighPct=toH; r.toLowPct=toL; r.posPct=pos;
-    r.closeness=Math.min(Math.max(toH,0),Math.max(toL,0));
+    r.toHighPct=toH; r.toLowPct=toL; r.posPct=pos; r.rangePct=((high/low)-1)*100;
+    const a=Math.max(toH,0), b=Math.max(toL,0);
+    r.closeness=Math.min(a,b);
+    r.closer=(a<b)?"High":(b<a?"Low":"Equal");
     return r;
   }
   const proxBar=posPct=>{
     if(!isF(posPct)) return "";
-    const clamped=Math.max(0,Math.min(100,posPct));
-    const px=(clamped/100)*118;
+    const clamped = Math.max(0, Math.min(100, posPct));
+    const px = (clamped/100)*118; // bar width 120, keep inside
     return `<span class="bar"><i class="lo"></i><i class="hi"></i><i class="p" style="left:${px}px"></i></span>`;
   };
 
-  function isShootingStarCandle(c){
-    const h=c.h, l=c.l, o=c.o, cl=c.cl;
-    if(!(isF(h)&&isF(l)&&isF(o)&&isF(cl))) return false;
-    const range=h-l; if(!(range>0)) return false;
-
-    const body=Math.abs(cl-o);
-    const upper=h - Math.max(o,cl);
-    const lower=Math.min(o,cl) - l;
-
-    const bodyPct= body / range;
-    const closePos=(cl - l) / range;
-
-    const upperOk = upper >= Math.max(body*2, range*0.50);
-    const lowerOk = lower <= Math.max(body*0.40, range*0.10);
-    const bodyOk  = bodyPct <= 0.35;
-    const posOk   = closePos <= 0.45;
-
-    return upperOk && lowerOk && bodyOk && posOk;
-  }
-
-  function quoteVolFromKline(k){
-    const close=+k[4], baseVol=+k[5];
-    const qv = isF(+k[7]) ? +k[7] : (isF(baseVol)&&isF(close)? baseVol*close : NaN);
-    return isF(qv) ? qv : null;
-  }
-
-  function classifyAccumulation({o,h,l,cl,vol,avgVol, volMult}){
-    if(!(isF(o)&&isF(h)&&isF(l)&&isF(cl)) || !(isF(vol)&&isF(avgVol)) || !(avgVol>0)) {
-      return {type:null, score:null};
-    }
-    const range=h-l; if(!(range>0)) return {type:null, score:null};
-    const dir = cl>o ? 1 : (cl<o ? -1 : 0);
-    const closePos = (cl - l)/range;
-    const volRatio = vol/avgVol;
-    const score = (dir===0?0:dir) * (closePos - 0.5) * (Math.min(5, volRatio));
-
-    let type="Neutral";
-    if(volRatio >= volMult && dir===1 && closePos >= 0.65) type="Accumulation";
-    else if(volRatio >= volMult && dir===-1 && closePos <= 0.35) type="Distribution";
-
-    return {type, score};
-  }
-
-  function accPill(type){
-    if(!type) return "—";
-    const cls = (type==="Accumulation") ? "bull" : (type==="Distribution" ? "bear" : "neu");
-    const label = (type==="Accumulation") ? "Accum" : (type==="Distribution" ? "Distrib" : "Neutral");
-    return `<span class="pill ${cls}">${label}</span>`;
-  }
-  function ssFlagPill(flag){
-    if(flag===true) return `<span class="pill bear">SS</span>`;
-    if(flag===false) return `<span class="pill neu">—</span>`;
-    return "—";
-  }
-  function tfTag(tf){ return tf ? `<span class="pill tag">${tf}</span>` : "—"; }
-
+  // --- Adapters (Binance + MEXC) ---
   const Adapters={
     binance:{
-      name:"Binance",
+      key:"binance",name:"Binance",
       base:(m)=>m==="perp"?"https://fapi.binance.com":"https://api.binance.com",
       ws:(m)=>m==="perp"?"wss://fstream.binance.com":"wss://stream.binance.com:9443",
       async topSymbols(m,n){
@@ -532,17 +343,27 @@
         filt.sort((a,b)=>(+b.quoteVolume)-(+a.quoteVolume));
         return filt.slice(0,n).map(d=>d.symbol);
       },
-      async batchPrices(m,syms){
-        const r=await fetch(this.base(m)+(m==="perp"?"/fapi/v1/ticker/price":"/api/v3/ticker/price"));
-        const all=await r.json();
-        const set=new Set(syms),map=new Map();
-        for(const it of all){ if(set.has(it.symbol)) map.set(it.symbol,+it.price) }
-        return map;
+      async klineHL_candleAt(m,sym,interval,istDateStr,istTimeStr){
+        const {end}=utcWindowForIst(istDateStr,istTimeStr);
+        const ms=intervalMsMap[interval]; if(!ms) return null;
+        const ep=m==="perp"?"/fapi/v1/klines":"/api/v3/klines";
+        const url=`${this.base(m)}${ep}?symbol=${sym}&interval=${interval}&endTime=${end}&limit=3`;
+        const r=await fetch(url); if(!r.ok) return null;
+        const arr=await r.json(); if(!arr.length) return null;
+        let chosen=null;
+        for(const k of arr){const o=k[0]; if(o<=end && end<o+ms){chosen=k;break}}
+        if(!chosen) chosen=arr[arr.length-1];
+        return chosen?{high:+chosen[2],low:+chosen[3],open:+chosen[0]}:null;
+      },
+      async klineDayOHLC(m,sym,istDateStr){
+        const {start,end}=utcWindowForIst(istDateStr,null);
+        const ep=m==="perp"?"/fapi/v1/klines":"/api/v3/klines";
+        const r=await fetch(`${this.base(m)}${ep}?symbol=${sym}&interval=1d&startTime=${start}&endTime=${end}&limit=1`);
+        const a=await r.json(); if(!Array.isArray(a)||!a.length) return null;
+        return {open:+a[0][1],high:+a[0][2],low:+a[0][3],close:+a[0][4],openTs:+a[0][0]};
       },
       async klineHL_window(m,sym,istDateStr,istTimeStr){
-        const start=istDayStartUtcMs(istDateStr);
-        const last=start+24*3600e3-1;
-        const end=istTimeStr?istDateTimeToUtcMs(istDateStr,istTimeStr):last;
+        const {start,end}=utcWindowForIst(istDateStr,istTimeStr);
         const interval=((end-start)/60000)<=999?"1m":"5m";
         const ep=m==="perp"?"/fapi/v1/klines":"/api/v3/klines";
         const r=await fetch(`${this.base(m)}${ep}?symbol=${sym}&interval=${interval}&startTime=${start}&endTime=${end}&limit=1000`);
@@ -561,12 +382,20 @@
         const a=await r.json(); if(!Array.isArray(a)||!a.length) return null;
         return +a[0][4];
       },
-      async klineSeries(m,sym,interval,endTime,limit){
-        const ep=m==="perp"?"/fapi/v1/klines":"/api/v3/klines";
-        const url=`${this.base(m)}${ep}?symbol=${sym}&interval=${interval}&endTime=${endTime}&limit=${Math.max(5, Math.min(1000, limit|0))}`;
-        const r=await fetch(url); if(!r.ok) return null;
-        const arr=await r.json(); if(!Array.isArray(arr)||!arr.length) return null;
-        return arr;
+      async batchPrices(m,syms){
+        const r=await fetch(this.base(m)+(m==="perp"?"/fapi/v1/ticker/price":"/api/v3/ticker/price"));
+        const all=await r.json();
+        const set=new Set(syms),map=new Map();
+        for(const it of all){ if(set.has(it.symbol)) map.set(it.symbol,+it.price) }
+        return map;
+      },
+      async batch24hStats(m,syms){
+        const r=await fetch(this.base(m)+(m==="perp"?"/fapi/v1/ticker/24hr":"/api/v3/ticker/24hr"));
+        if(!r.ok) return new Map();
+        const data=await r.json();
+        const set=new Set(syms),map=new Map();
+        for(const d of data){ if(set.has(d.symbol)) map.set(d.symbol,{qvol:+d.quoteVolume||0}) }
+        return map;
       },
       connectWS(m,syms,onPrice){
         const chunks=[];
@@ -586,7 +415,7 @@
       }
     },
     mexc:{
-      name:"MEXC",
+      key:"mexc",name:"MEXC",
       base:()=> "https://api.mexc.com",
       async topSymbols(m,n){
         if(m==="perp") return [];
@@ -596,20 +425,29 @@
         usdt.sort((a,b)=>(+b.quoteVolume)-(+a.quoteVolume));
         return usdt.slice(0,n).map(d=>d.symbol);
       },
-      async batchPrices(m,syms){
-        if(m==="perp") return new Map();
-        const r=await fetch(this.base()+"/api/v3/ticker/price");
-        if(!r.ok) return new Map();
-        const all=await r.json();
-        const set=new Set(syms),map=new Map();
-        for(const it of all){ if(set.has(it.symbol)) map.set(it.symbol,+it.price) }
-        return map;
+      async klineHL_candleAt(m,sym,interval,istDateStr,istTimeStr){
+        if(m==="perp") return null;
+        const {end}=utcWindowForIst(istDateStr,istTimeStr);
+        const ms=intervalMsMap[interval]; if(!ms) return null;
+        const r=await fetch(`${this.base()}/api/v3/klines?symbol=${sym}&interval=${interval}&endTime=${end}&limit=3`);
+        if(!r.ok) return null;
+        const arr=await r.json(); if(!arr.length) return null;
+        let chosen=null;
+        for(const k of arr){const o=k[0]; if(o<=end && end<o+ms){chosen=k;break}}
+        if(!chosen) chosen=arr[arr.length-1];
+        return chosen?{high:+chosen[2],low:+chosen[3],open:+chosen[0]}:null;
+      },
+      async klineDayOHLC(m,sym,istDateStr){
+        if(m==="perp") return null;
+        const {start,end}=utcWindowForIst(istDateStr,null);
+        const r=await fetch(`${this.base()}/api/v3/klines?symbol=${sym}&interval=1d&startTime=${start}&endTime=${end}&limit=1`);
+        if(!r.ok) return null;
+        const a=await r.json(); if(!a.length) return null;
+        return {open:+a[0][1],high:+a[0][2],low:+a[0][3],close:+a[0][4],openTs:+a[0][0]};
       },
       async klineHL_window(m,sym,istDateStr,istTimeStr){
         if(m==="perp") return null;
-        const start=istDayStartUtcMs(istDateStr);
-        const last=start+24*3600e3-1;
-        const end=istTimeStr?istDateTimeToUtcMs(istDateStr,istTimeStr):last;
+        const {start,end}=utcWindowForIst(istDateStr,istTimeStr);
         const interval=((end-start)/60000)<=999?"1m":"5m";
         const r=await fetch(`${this.base()}/api/v3/klines?symbol=${sym}&interval=${interval}&startTime=${start}&endTime=${end}&limit=1000`);
         if(!r.ok) return null;
@@ -627,151 +465,141 @@
         const a=await r.json(); if(!a.length) return null;
         return +a[0][4];
       },
-      async klineSeries(m,sym,interval,endTime,limit){
-        if(m==="perp") return null;
-        const url=`${this.base()}/api/v3/klines?symbol=${sym}&interval=${interval}&endTime=${endTime}&limit=${Math.max(5, Math.min(1000, limit|0))}`;
-        const r=await fetch(url); if(!r.ok) return null;
-        const arr=await r.json(); if(!Array.isArray(arr)||!arr.length) return null;
-        return arr;
+      async batchPrices(m,syms){
+        if(m==="perp") return new Map();
+        const r=await fetch(this.base()+"/api/v3/ticker/price");
+        if(!r.ok) return new Map();
+        const all=await r.json();
+        const set=new Set(syms),map=new Map();
+        for(const it of all){ if(set.has(it.symbol)) map.set(it.symbol,+it.price) }
+        return map;
+      },
+      async batch24hStats(m,syms){
+        if(m==="perp") return new Map();
+        const r=await fetch(this.base()+"/api/v3/ticker/24hr");
+        if(!r.ok) return new Map();
+        const data=await r.json();
+        const set=new Set(syms),map=new Map();
+        for(const d of data){ if(set.has(d.symbol)) map.set(d.symbol,{qvol:+d.quoteVolume||0}) }
+        return map;
       },
       connectWS(){ return []; }
     }
   };
 
+  // --- state ---
   const state={
-    symbols:[],
-    rows:new Map(),
-    sockets:[],
-    restPoll:null,
-    sortKey:"closeness",
-    sortDir:1,
-    marketType:"spot",
-    exchanges:new Set(["binance"]),
-    timeframe:"auto",
-    pat:{tf:"1h",accLB:20,accVM:1.2,ssLB:120,ssTfs:["15m","1h","4h"]},
-    patEndMs:null,
-    chipState:{} // used for highlighting
+    dateStr:null,timeIst:null,threshold:0.25,marketType:"spot",exchanges:new Set(["binance"]),timeframe:"auto",
+    rows:new Map(),symbols:[],sockets:[],restPoll:null,
+    sortKey:"closeness",sortDir:1,lookbackHrs:24,maxClose:null,
+    cg:{list:null,mcapByBase:new Map()}, rvol:{min:1.5,days:20,only:false},
+    pt:{thr:0.25,onlyNear:false}
   };
 
+  // set default date to "today in IST"
+  const now = Date.now();
+  $("#date").value = istDateLabelFromMs(now);
+
+  // --- CoinGecko mcap ---
+  async function ensureCGList(){
+    if(state.cg.list) return;
+    const r=await fetch("https://api.coingecko.com/api/v3/coins/list?include_platform=false");
+    state.cg.list=await r.json();
+  }
+  const baseAsset=s=> s.replace(/(USDT|BUSD|USDC|FDUSD|TUSD|USD)$/,'');
+  function pickIdsForBases(bases){
+    const idsByBase=new Map();
+    for(const b of bases){
+      const sym=b.toLowerCase();
+      const matches=(state.cg.list||[]).filter(x=>x.symbol===sym);
+      let id=null;
+      if(matches.length===1) id=matches[0].id;
+      else if(matches.length>1){
+        const preferred=matches.find(x=>/^(bitcoin|ethereum|tether|solana|ripple|cardano|dogecoin|tron|polkadot|litecoin)$/i.test(x.name));
+        id=(preferred||matches[0]).id;
+      }
+      if(id) idsByBase.set(b,id);
+    }
+    return idsByBase;
+  }
+  async function fetchMarketCaps(){
+    setStatus("Fetching market caps…");
+    try{
+      await ensureCGList();
+      const bases=new Set(Array.from(state.rows.values()).map(r=>baseAsset(r.symbol)));
+      const idsByBase=pickIdsForBases(bases);
+      const ids=[...idsByBase.values()];
+      const mcapById=new Map();
+      for(let i=0;i<ids.length;i+=200){
+        const chunk=ids.slice(i,i+200);
+        const r=await fetch(`https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=${encodeURIComponent(chunk.join(','))}&per_page=250&page=1`);
+        if(r.ok){
+          const arr=await r.json();
+          for(const it of arr){ if(it&&it.id) mcapById.set(it.id,it.market_cap??null); }
+        }
+        await new Promise(res=>setTimeout(res,140));
+      }
+      state.cg.mcapByBase.clear();
+      idsByBase.forEach((id,base)=> state.cg.mcapByBase.set(base, mcapById.get(id)??null));
+
+      let known=0;
+      for(const r of state.rows.values()){
+        const base=baseAsset(r.symbol);
+        r.mcap=state.cg.mcapByBase.get(base)??null;
+        if(r.mcap) known++;
+      }
+      mcKnown.textContent=String(known);
+      scheduleRender(); computeRecommendations(); setStatus("Ready"); play.done();
+    }catch(e){
+      setStatus("CoinGecko error");
+    }
+  }
+
+  // --- render ---
   function setStatus(s){ statusTxt.textContent=s; }
   let needsRender=false;
   function scheduleRender(){
     if(needsRender) return;
     needsRender=true;
-    requestAnimationFrame(()=>{needsRender=false; render();});
-  }
-
-  function getTargetPriceForRow(r){
-    const manual = parseFloat(($("#targetPrice").value||"").trim());
-    if(Number.isFinite(manual) && manual>0) return manual;
-    if(isF(r.pAt)) return r.pAt;
-    if(isF(r.price)) return r.price;
-    return null;
-  }
-
-  function effectiveCloseLimit(){
-    const thr = Math.max(0, parseFloat($("#threshold").value||"0")||0);
-    const maxCloseStr = ($("#maxClose").value||"").trim();
-    const maxClose = maxCloseStr==="" ? null : Math.max(0, parseFloat(maxCloseStr)||0);
-    return (maxClose!=null && isF(maxClose)) ? maxClose : thr;
-  }
-
-  function passesFilters(r){
-    const q=($("#search").value||"").trim().toUpperCase();
-    if(q && !(`${r.exchangeName} ${r.symbol} ${r.market}`.toUpperCase().includes(q))) return false;
-
-    const closeLimit = effectiveCloseLimit();
-    if(!(isF(r.closeness) && r.closeness<=closeLimit)) return false;
-
-    const ptOnly = $("#ptOnlyNear").checked;
-    const ptThr  = Math.max(0, parseFloat($("#ptThr").value||"0")||0);
-    if(ptOnly){
-      if(!isF(r.toPtPct)) return false;
-      if(Math.abs(r.toPtPct) > ptThr) return false;
-    }
-
-    const accF = $("#accFilter").value;
-    if(accF==="accum" && r.accType!=="Accumulation") return false;
-    if(accF==="distrib" && r.accType!=="Distribution") return false;
-    if(accF==="neutral" && r.accType!=="Neutral") return false;
-    if(accF==="nonneutral" && !(r.accType==="Accumulation" || r.accType==="Distribution")) return false;
-
-    const ssF = $("#ssFilter").value;
-    const withinHrs = Math.max(1, parseInt($("#ssWithinHrs").value||"48",10)||48);
-    const endMs = state.patEndMs || endpointUtcMs();
-    const hasLast = isF(r.ssLastTs);
-    const within = hasLast ? ((endMs - r.ssLastTs) <= withinHrs*3600e3) : false;
-
-    if(ssF==="ssNow" && r.ssNow!==true) return false;
-    if(ssF==="hasLast" && !hasLast) return false;
-    if(ssF==="within" && !within) return false;
-    if(ssF==="none" && (r.ssNow===true || hasLast)) return false;
-
-    return true;
-  }
-
-  function updateRecs(visibleRows){
-    const pool = visibleRows.filter(r=>isF(r.toHighPct)&&isF(r.toLowPct)&&isF(r.closeness));
-    const nearHigh = pool
-      .filter(r=> (r.toHighPct??Infinity) <= (r.toLowPct??Infinity))
-      .sort((a,b)=>(a.closeness-b.closeness))
-      .slice(0,18);
-
-    const nearLow = pool
-      .filter(r=> (r.toLowPct??Infinity) < (r.toHighPct??Infinity))
-      .sort((a,b)=>(a.closeness-b.closeness))
-      .slice(0,18);
-
-    const endMs = state.patEndMs || endpointUtcMs();
-    const withinHrs = Math.max(1, parseInt($("#ssWithinHrs").value||"48",10)||48);
-    const withinMs = withinHrs*3600e3;
-
-    const ssNow = visibleRows.filter(r=>r.ssNow===true).slice(0,18);
-    const ssRecent = visibleRows
-      .filter(r=>isF(r.ssLastTs) && (endMs - r.ssLastTs) <= withinMs)
-      .sort((a,b)=>(b.ssLastTs - a.ssLastTs))
-      .slice(0,18);
-
-    const lineHL = (x,side)=>`
-      <div class="rec-item">
-        <div><strong>${x.symbolDisp}</strong> <span class="pill">${x.exchangeName}</span></div>
-        <div class="note">${side} • close ${fmtN(x.closeness)}%</div>
-      </div>`;
-
-    recHigh.innerHTML = nearHigh.length ? nearHigh.map(x=>lineHL(x,"Near High")).join("") : `<div class="note">None</div>`;
-    recLow.innerHTML  = nearLow.length  ? nearLow.map(x=>lineHL(x,"Near Low")).join("") : `<div class="note">None</div>`;
-
-    const linePat = (x,kind)=>`
-      <div class="rec-item">
-        <div>
-          <strong>${x.symbolDisp}</strong>
-          ${x.accType?accPill(x.accType):""}
-          ${x.ssNow===true?'<span class="pill bear">SS@Target</span>':""}
-        </div>
-        <div class="note">
-          ${kind}
-          ${x.ssNowTf?` • TF ${x.ssNowTf}`:""}
-          ${isF(x.ssLastTs)?` • Last ${toIST12(x.ssLastTs)}`:""}
-        </div>
-      </div>`;
-
-    const patHtml = []
-      .concat(ssNow.map(x=>linePat(x,"Shooting Star at Target")))
-      .concat(ssRecent.map(x=>linePat(x,`Last SS within ${withinHrs}h`)))
-      .slice(0,24)
-      .join("");
-
-    recTouch.innerHTML = patHtml || `<div class="note">Compute Patterns to populate this panel.</div>`;
+    (requestAnimationFrame||setTimeout)(()=>{needsRender=false; render();},16);
   }
 
   function render(){
-    const allRows = Array.from(state.rows.values());
-    const rows = allRows.filter(passesFilters);
+    const q=($("#search").value||"").trim().toUpperCase();
+    const filterRecent=$("#filterRecent").checked;
+    const rvolOnly=$("#rvolOnly").checked;
+    const minRV=Math.max(0, parseFloat($("#rvolMin").value||"0")||0);
+    const ptOnlyNear=$("#ptOnlyNear").checked;
+    const ptThr=Math.max(0, parseFloat($("#ptThr").value||"0")||0);
+
+    const preset=$("#mcPreset").value||"";
+    if(preset) $("#mcMin").value=preset;
+
+    const mcMin=parseFloat($("#mcMin").value||"");
+    const mcMax=parseFloat($("#mcMax").value||"");
+    const hasMin=Number.isFinite(mcMin), hasMax=Number.isFinite(mcMax);
+
+    const maxCloseVal=$("#maxClose").value.trim();
+    state.maxClose=maxCloseVal===""?null:Math.max(0,parseFloat(maxCloseVal)||0);
+
+    let rows=Array.from(state.rows.values()).filter(r=>{
+      if(q && !(`${r.exchangeName} ${r.symbol} ${r.market}`.toUpperCase().includes(q))) return false;
+      if(filterRecent && !r.touchedAnyRecent) return false;
+      if(state.maxClose!=null && (!isF(r.closeness)||r.closeness>state.maxClose)) return false;
+      if(rvolOnly){ if(!isF(r.rvol) || r.rvol<minRV) return false; }
+      if(ptOnlyNear){ if(!isF(r.toPtPct) || Math.abs(r.toPtPct)>ptThr) return false; }
+      if(hasMin||hasMax){
+        if(r.mcap==null) return false;
+        if(hasMin && r.mcap<mcMin) return false;
+        if(hasMax && r.mcap>mcMax) return false;
+      }
+      return true;
+    });
 
     rows.sort((a,b)=>{
       const k=state.sortKey, dir=state.sortDir;
       let av=a[k], bv=b[k];
-      const numCols=["price","high","low","toHighPct","toLowPct","posPct","closeness","toPtPct","pAt","accScore","toSsPct","ssLastTs"];
+      const numCols=["price","high","low","toHighPct","toLowPct","posPct","closeness","mcap","rangePct","rvol","qvol24h","avgQVol","toPtPct","pAt"];
       const isNum=numCols.includes(k);
       if(isNum){ av=(isF(av)?av:Infinity); bv=(isF(bv)?bv:Infinity); }
       else { av=(av??""); bv=(bv??""); }
@@ -787,184 +615,134 @@
       frag.appendChild(tr);
     }else{
       for(const r of rows){
+        const dirClass = r.dayDir==="Bullish"?"bull":(r.dayDir==="Bearish"?"bear":(r.dayDir==="Doji"?"doji":""));
+        const dirHtml = r.dayDir? `<span class="pill ${dirClass}">${r.dayDir}</span>` : "—";
         const tr=document.createElement('tr');
         tr.innerHTML=`
-          <td class="sticky-1">${r.exchangeName}</td>
-          <td class="sticky-2"><strong>${r.symbolDisp}</strong></td>
-
+          <td>${r.exchangeName}</td>
+          <td><strong>${r.symbolDisp}</strong></td>
           <td class="note">${r.market==="perp"?"Perp":"Spot"}</td>
           <td>${fmtN(r.price)}</td>
-
           <td>${fmtN(r.high)}</td>
           <td>${fmtN(r.low)}</td>
+          <td>${fmtPct(r.rangePct)}</td>
           <td>${fmtPct(r.toHighPct)}</td>
           <td>${fmtPct(r.toLowPct)}</td>
           <td>${isF(r.closeness)?fmtN(r.closeness):"—"}%</td>
           <td>${isF(r.posPct)?r.posPct.toFixed(2):"—"}%</td>
-          <td>${proxBar(r.posPct)}</td>
 
+          <!-- MOVED HERE: Day Close value -->
+          <td>${dirHtml}</td>
+
+          <td>${proxBar(r.posPct)}</td>
           <td>${isF(r.pAt)?fmtN(r.pAt):"—"}</td>
           <td>${isF(r.toPtPct)?fmtN(Math.abs(r.toPtPct)):"—"}%</td>
-
-          <td>${accPill(r.accType)}</td>
-          <td>${isF(r.accScore)?(r.accScore.toFixed(3)):"—"}</td>
-
-          <td>${ssFlagPill(r.ssNow)}</td>
-          <td>${tfTag(r.ssNowTf)}</td>
-          <td class="note">${isF(r.ssLastTs)?toIST12(r.ssLastTs):"—"}</td>
-          <td>${tfTag(r.ssTf)}</td>
-
-          <td>${isF(r.toSsPct)?fmtN(r.toSsPct):"—"}%</td>
-        `;
+          <td>${isF(r.rvol)?r.rvol.toFixed(2):"—"}</td>
+          <td>${isF(r.qvol24h)?("$"+fmtInt(r.qvol24h)):"—"}</td>
+          <td>${isF(r.avgQVol)?("$"+fmtInt(r.avgQVol)):"—"}</td>
+          <td>${r.mcap? r.mcap.toLocaleString():"—"}</td>
+          <td class="note">${r.date||"—"}</td>`;
         frag.appendChild(tr);
       }
     }
     tbody.replaceChildren(frag);
-
     rowCount.textContent=String(rows.length);
-    allCount.textContent=String(allRows.length);
 
     $$("thead th").forEach(th=>th.classList.remove("sort-asc","sort-desc"));
     const th=document.querySelector(`thead th[data-k="${state.sortKey}"]`);
     if(th) th.classList.add(state.sortDir===1?"sort-asc":"sort-desc");
 
-    updateRecs(rows);
-    refreshChipHighlights();
+    if(!prefersReduced) tbody.querySelectorAll('.bar .p').forEach(el=>{el.classList.remove('ping'); void el.offsetWidth; el.classList.add('ping');});
   }
 
+  function computeRecommendations(){
+    const filterRecent=$("#filterRecent").checked;
+    const maxClose=state.maxClose;
+
+    const rvolOnly=$("#rvolOnly").checked;
+    const minRV=Math.max(0, parseFloat($("#rvolMin").value||"0")||0);
+
+    const mcMin=parseFloat($("#mcMin").value||"");
+    const mcMax=parseFloat($("#mcMax").value||"");
+    const hasMin=Number.isFinite(mcMin), hasMax=Number.isFinite(mcMax);
+
+    const pool=Array.from(state.rows.values()).filter(r=>{
+      if(!isF(r.high)||!isF(r.low)||!isF(r.price)||!isF(r.closeness)) return false;
+      if(filterRecent && !r.touchedAnyRecent) return false;
+      if(maxClose!=null && r.closeness>maxClose) return false;
+      if(rvolOnly && (!isF(r.rvol)||r.rvol<minRV)) return false;
+      if(hasMin||hasMax){
+        if(r.mcap==null) return false;
+        if(hasMin && r.mcap<mcMin) return false;
+        if(hasMax && r.mcap>mcMax) return false;
+      }
+      return true;
+    });
+
+    const nearHigh=pool.filter(r=> (r.toHighPct??Infinity) <= (r.toLowPct??Infinity)).sort((a,b)=>a.closeness-b.closeness).slice(0,20);
+    const nearLow =pool.filter(r=> (r.toLowPct??Infinity)  < (r.toHighPct??Infinity)).sort((a,b)=>a.closeness-b.closeness).slice(0,20);
+    const touched=pool.filter(r=>r.touchedAnyRecent).sort((a,b)=>Math.max(b.whenHighRecent||0,b.whenLowRecent||0)-Math.max(a.whenHighRecent||0,a.whenLowRecent||0)).slice(0,20);
+
+    const line=x=>{
+      const when = Math.max(x.whenHighRecent||0, x.whenLowRecent||0);
+      return `<div class="rec-item">
+        <div><strong>${x.symbolDisp}</strong> <span class="pill">${x.market==="perp"?"Perp":"Spot"}</span></div>
+        <div class="note">close ${fmtN(x.closeness)}% • ${toIST12(when)}</div>
+      </div>`;
+    };
+    recHigh.innerHTML=nearHigh.length?nearHigh.map(line).join(""):`<div class="note">None</div>`;
+    recLow.innerHTML =nearLow.length ?nearLow.map(line).join(""):`<div class="note">None</div>`;
+    recTouch.innerHTML=touched.length?touched.map(line).join(""):`<div class="note">None</div>`;
+  }
+
+  // --- sorting ---
   $$("thead th").forEach(th=>{
     const k=th.getAttribute("data-k"); if(!k) return;
     th.addEventListener("click",()=>{
       if(state.sortKey===k) state.sortDir*=-1;
       else {state.sortKey=k; state.sortDir=1;}
-      scheduleRender();
+      scheduleRender(); play.sort();
     },{passive:true});
   });
 
-  // UI events
-  $("#threshold").addEventListener("input",scheduleRender,{passive:true});
-  $("#maxClose").addEventListener("input",scheduleRender,{passive:true});
-  $("#search").addEventListener("input",()=>{ clearTimeout(render._t); render._t=setTimeout(scheduleRender,80); });
-
-  $("#ptOnlyNear").addEventListener("change",scheduleRender,{passive:true});
-  $("#ptThr").addEventListener("input",scheduleRender,{passive:true});
-
-  $("#accFilter").addEventListener("change",scheduleRender,{passive:true});
-  $("#ssFilter").addEventListener("change",scheduleRender,{passive:true});
-  $("#ssWithinHrs").addEventListener("input",scheduleRender,{passive:true});
-  $("#targetPrice").addEventListener("input",scheduleRender,{passive:true});
-
-  $("#marketType").addEventListener("change",async()=>{ state.marketType=$("#marketType").value; await loadAll(); },{passive:true});
-  $$(".exch").forEach(cb=>cb.addEventListener("change",async()=>{
-    state.exchanges=new Set($$(".exch").filter(x=>x.checked).map(x=>x.value));
-    await loadAll();
-  },{passive:true}));
-
-  $("#date").addEventListener("change",async()=>{ await loadAll(); },{passive:true});
-  $("#timeIst").addEventListener("change",async()=>{ await loadAll(); },{passive:true});
-  $("#tfSelect").addEventListener("change",async()=>{ state.timeframe=$("#tfSelect").value; await loadAll(); },{passive:true});
-  $("#refresh").addEventListener("click",async()=>{ await loadAll(); });
-  $("#loadTop").addEventListener("click",async()=>{ await loadSymbolsTop(); await loadAll(); });
-
-  $("#patternTf").addEventListener("change",()=>{ state.pat.tf=$("#patternTf").value||"1h"; },{passive:true});
-  $("#accLB").addEventListener("input",()=>{ state.pat.accLB=Math.min(80,Math.max(5,parseInt($("#accLB").value||"20",10)||20)); },{passive:true});
-  $("#accVM").addEventListener("input",()=>{ state.pat.accVM=Math.min(5,Math.max(0.8,parseFloat($("#accVM").value||"1.2")||1.2)); },{passive:true});
-  $("#ssLB").addEventListener("input",()=>{ state.pat.ssLB=Math.min(300,Math.max(30,parseInt($("#ssLB").value||"120",10)||120)); },{passive:true});
-  $$(".ssTf").forEach(cb=>cb.addEventListener("change",()=>{
-    const tfs=$$(".ssTf").filter(x=>x.checked).map(x=>x.value);
-    state.pat.ssTfs = tfs.length ? tfs : ["1h"];
-  },{passive:true}));
-
-  $("#patternsBtn").addEventListener("click",async()=>{ await computePatternsAll(); });
+  // --- event wiring ---
+  $("#threshold").addEventListener("input",e=>{
+    state.threshold=Math.max(0,parseFloat(e.target.value||"0")||0);
+    state.rows.forEach(r=>Object.assign(r,compute(r.price,r.high,r.low)));
+    scheduleRender(); computeRecommendations();
+  },{passive:true});
+  $("#maxClose").addEventListener("input",()=>{ scheduleRender(); computeRecommendations(); },{passive:true});
+  $("#marketType").addEventListener("change",async()=>{ state.marketType=$("#marketType").value; await withStatus(loadAll); },{passive:true});
+  $$(".exch").forEach(cb=>cb.addEventListener("change",async()=>{ state.exchanges=new Set($$(".exch").filter(x=>x.checked).map(x=>x.value)); await withStatus(loadAll); },{passive:true}));
+  $("#date").addEventListener("change",async()=>{ await withStatus(loadAll); },{passive:true});
+  $("#timeIst").addEventListener("change",async()=>{ await withStatus(loadAll); },{passive:true});
+  $("#tfSelect").addEventListener("change",async()=>{ state.timeframe=$("#tfSelect").value; await withStatus(loadAll); },{passive:true});
+  $("#refresh").addEventListener("click",async()=>{ await withStatus(loadAll); });
+  (function(){let t=null; $("#search").addEventListener("input",()=>{clearTimeout(t); t=setTimeout(()=>scheduleRender(),100);});})();
+  $("#lookbackHrs").addEventListener("input",()=>{ state.lookbackHrs=Math.max(1,parseInt($("#lookbackHrs").value||"24",10)||24); },{passive:true});
+  $("#filterRecent").addEventListener("change",()=>{ scheduleRender(); computeRecommendations(); },{passive:true});
+  $("#scanRecentBtn").addEventListener("click",async()=>{ await scanRecentTouches(); });
+  $("#loadTop").addEventListener("click",async()=>{ await withStatus(async()=>{ await loadSymbolsTop(); await loadAll(); }); });
+  $("#mcFetch").addEventListener("click",async()=>{ await fetchMarketCaps(); });
+  $("#mcPreset").addEventListener("change",()=>{ scheduleRender(); computeRecommendations(); },{passive:true});
+  $("#mcMin").addEventListener("input",()=>{ scheduleRender(); computeRecommendations(); },{passive:true});
+  $("#mcMax").addEventListener("input",()=>{ scheduleRender(); computeRecommendations(); },{passive:true});
+  $("#rvolMin").addEventListener("input",()=>{ state.rvol.min=Math.max(0,parseFloat($("#rvolMin").value||"0")||0); scheduleRender(); computeRecommendations(); },{passive:true});
+  $("#rvolDays").addEventListener("input",()=>{ state.rvol.days=Math.min(60,Math.max(5,parseInt($("#rvolDays").value||"20",10)||20)); },{passive:true});
+  $("#rvolOnly").addEventListener("change",()=>{ state.rvol.only=$("#rvolOnly").checked; scheduleRender(); computeRecommendations(); },{passive:true});
+  $("#rvolCompute").addEventListener("click",async()=>{ await computeRVOLAll(); });
   $("#ptCompute").addEventListener("click",async()=>{ await computePAtAll(); });
+  $("#ptOnlyNear").addEventListener("change",()=>{ scheduleRender(); });
+  $("#ptThr").addEventListener("input",()=>{ scheduleRender(); });
 
-  // ✅ Quick Filter Chips
-  function buildChips(){
-    const host=$("#chips");
-    const defs=[
-      {id:"chip_ssNow",  label:"SS@Target", tone:"danger", on(){ $("#ssFilter").value="ssNow"; }},
-      {id:"chip_ssHas",  label:"Has Last SS", tone:"danger", on(){ $("#ssFilter").value="hasLast"; }},
-      {id:"chip_ss24",   label:"LastSS<24h", tone:"danger", on(){ $("#ssFilter").value="within"; $("#ssWithinHrs").value="24"; }},
-      {id:"chip_ss48",   label:"LastSS<48h", tone:"danger", on(){ $("#ssFilter").value="within"; $("#ssWithinHrs").value="48"; }},
-      {id:"chip_ssNone", label:"No SS", tone:"danger", on(){ $("#ssFilter").value="none"; }},
-      {sep:true},
-      {id:"chip_accum",  label:"Accum", tone:"ok", on(){ $("#accFilter").value="accum"; }},
-      {id:"chip_distrib",label:"Distrib", tone:"ok", on(){ $("#accFilter").value="distrib"; }},
-      {id:"chip_neu",    label:"Neutral", tone:"ok", on(){ $("#accFilter").value="neutral"; }},
-      {id:"chip_non",    label:"Non-neutral", tone:"ok", on(){ $("#accFilter").value="nonneutral"; }},
-      {sep:true},
-      {id:"chip_pt",     label:"Near P@Target", tone:"blue", on(){
-        $("#ptOnlyNear").checked = !$("#ptOnlyNear").checked;
-      }},
-      {id:"chip_reset",  label:"Reset Filters", tone:"warn", on(){ resetFilters(); }, reset:true}
-    ];
-
-    host.innerHTML="";
-    for(const d of defs){
-      if(d.sep){
-        const s=document.createElement("span");
-        s.className="chipsep";
-        host.appendChild(s);
-        continue;
-      }
-      const b=document.createElement("button");
-      b.type="button";
-      b.id=d.id;
-      b.className=`chipbtn ${d.tone||""}`.trim();
-      b.textContent=d.label;
-      b.addEventListener("click",()=>{
-        d.on?.();
-        scheduleRender();
-      });
-      host.appendChild(b);
-    }
+  async function withStatus(fn){
+    setStatus("Working…");
+    try{ await fn(); }
+    finally{ setStatus("Ready"); }
   }
 
-  function resetFilters(){
-    $("#accFilter").value="any";
-    $("#ssFilter").value="any";
-    $("#ssWithinHrs").value="48";
-    $("#ptOnlyNear").checked=false;
-    $("#ptThr").value="0.25";
-    $("#targetPrice").value="";
-    $("#maxClose").value="";
-    // keep threshold as user preference; keep search text
-  }
-
-  function refreshChipHighlights(){
-    // highlight based on current UI state
-    const ss = $("#ssFilter").value;
-    const hrs = parseInt($("#ssWithinHrs").value||"48",10)||48;
-    const acc = $("#accFilter").value;
-    const pt  = $("#ptOnlyNear").checked;
-
-    const setActive=(id,yes)=>{
-      const el=$("#"+id);
-      if(!el) return;
-      el.classList.toggle("active", !!yes);
-    };
-
-    setActive("chip_ssNow", ss==="ssNow");
-    setActive("chip_ssHas", ss==="hasLast");
-    setActive("chip_ssNone", ss==="none");
-    setActive("chip_ss24", ss==="within" && hrs===24);
-    setActive("chip_ss48", ss==="within" && hrs===48);
-
-    setActive("chip_accum", acc==="accum");
-    setActive("chip_distrib", acc==="distrib");
-    setActive("chip_neu", acc==="neutral");
-    setActive("chip_non", acc==="nonneutral");
-
-    setActive("chip_pt", pt);
-
-    // Reset is "active" when any filter is on
-    const anyOn = (ss!=="any") || (acc!=="any") || pt || ($("#maxClose").value||"").trim()!=="" || ($("#targetPrice").value||"").trim()!=="";
-    setActive("chip_reset", anyOn);
-  }
-
-  // data flow
+  // --- data flow ---
   async function loadSymbolsTop(){
-    setStatus("Loading top symbols…");
     const n=parseInt($("#topn").value,10)||500;
     const m=state.marketType;
     const exs=Array.from(state.exchanges);
@@ -977,7 +755,6 @@
       }catch{}
     }));
     state.symbols=out;
-    setStatus("Ready");
   }
 
   function clearSockets(){
@@ -987,31 +764,26 @@
   }
 
   async function loadAll(){
-    setStatus("Loading…");
     clearSockets();
     clearInterval(state.restPoll);
+    state.rows.clear();
+    scheduleRender();
 
-    const dateStr=$("#date").value || istDateLabelFromMs(Date.now());
-    const timeStr=($("#timeIst").value||"").trim()||null;
-    state.patEndMs = endpointUtcMs();
+    state.dateStr=$("#date").value || istDateLabelFromMs(Date.now());
+    state.timeIst=($("#timeIst").value||"").trim()||null;
 
     if(!state.symbols.length) await loadSymbolsTop();
-
-    state.rows.clear();
-    ptKnown.textContent="0";
-    patKnown.textContent="0";
 
     for(const o of state.symbols){
       const key=`${o.exchangeKey}|${o.market}|${o.symbol}`;
       state.rows.set(key,{
         key,exchangeKey:o.exchangeKey,exchangeName:o.exchangeName,market:o.market,symbol:o.symbol,
         symbolDisp:o.symbol.endsWith("USDT")?o.symbol.replace("USDT","/USDT"):o.symbol,
-        price:null,high:null,low:null,toHighPct:null,toLowPct:null,posPct:null,closeness:null,
+        price:null,high:null,low:null,toHighPct:null,toLowPct:null,posPct:null,closer:"—",closeness:null,rangePct:null,
+        touchedAnyRecent:false,whenHighRecent:null,whenLowRecent:null,mcap:null,qvol24h:null,avgQVol:null,rvol:null,
         pAt:null,toPtPct:null,
-        accType:null,accScore:null,
-        ssNow:null, ssNowTf:null,
-        ssLastTs:null, ssTf:null, ssClose:null,
-        toSsPct:null
+        date: timeLabelISTForWindow(state.dateStr,state.timeIst),
+        dayOpen:null, dayClose:null, dayDir:null
       });
     }
     scheduleRender();
@@ -1024,6 +796,7 @@
       (groups[gk] ||= []).push(o.symbol);
     }
 
+    // initial prices
     await Promise.all(Object.keys(groups).map(async gk=>{
       const [ex,market]=gk.split("|");
       const a=Adapters[ex];
@@ -1038,51 +811,95 @@
     }));
     scheduleRender();
 
+    // 24h stats
     await Promise.all(Object.keys(groups).map(async gk=>{
       const [ex,market]=gk.split("|");
       const a=Adapters[ex];
       const list=groups[gk];
-      const perBatch=26;
+      try{
+        const map=await a.batch24hStats(market,list);
+        map.forEach((obj,sym)=>{
+          const r=state.rows.get(`${ex}|${market}|${sym}`);
+          if(r) r.qvol24h=obj.qvol||null;
+        });
+      }catch{}
+    }));
+    scheduleRender();
+
+    // TF H/L + daily OHLC dir
+    const tf=state.timeframe;
+    const tasks=[];
+    Object.keys(groups).forEach(gk=>{
+      const [ex,market]=gk.split("|");
+      const a=Adapters[ex];
+      const list=groups[gk];
+      const perBatch=20;
+
       for(let i=0;i<list.length;i+=perBatch){
         const slice=list.slice(i,i+perBatch).map(async sym=>{
           const r=state.rows.get(`${ex}|${market}|${sym}`); if(!r) return;
           try{
-            const res=await a.klineHL_window(market,sym,dateStr,timeStr);
-            if(res){ r.high=res.high; r.low=res.low; }
+            // daily direction
+            try{
+              const d=await a.klineDayOHLC(market,sym,state.dateStr);
+              if(d){
+                r.dayOpen=d.open; r.dayClose=d.close;
+                r.dayDir = (d.close>d.open) ? "Bullish" : (d.close<d.open ? "Bearish" : "Doji");
+              }
+            }catch{ r.dayOpen=r.dayClose=null; r.dayDir=null; }
+
+            // timeframe hi/lo
+            let kl=null;
+            if(tf && tf!=="auto"){
+              kl=await a.klineHL_candleAt(market,sym,tf,state.dateStr,state.timeIst);
+              if(kl){ r.high=kl.high; r.low=kl.low; r.date=candleIstLabel(kl.open,tf); }
+            }else{
+              const hasTime=!!state.timeIst;
+              const res=hasTime
+                ? await a.klineHL_window(market,sym,state.dateStr,state.timeIst)
+                : await (async()=>{ const d=await a.klineDayOHLC(market,sym,state.dateStr); return d?{high:d.high,low:d.low,open:d.openTs}:null; })();
+
+              if(res){
+                r.high=res.high; r.low=res.low;
+                r.date = hasTime ? timeLabelISTForWindow(state.dateStr,state.timeIst) : candleIstLabel(res.open,"1d");
+              }
+            }
+
             if(isF(r.price)&&isF(r.high)&&isF(r.low)) Object.assign(r,compute(r.price,r.high,r.low));
           }catch{}
         });
-        await Promise.all(slice);
-        scheduleRender();
-        await new Promise(res=>setTimeout(res,45));
+        tasks.push(Promise.all(slice).then(()=>scheduleRender()));
       }
-    }));
+    });
 
+    for(let i=0;i<tasks.length;i++){
+      await tasks[i];
+      if(i%6===0) await new Promise(res=>setTimeout(res,60));
+    }
+
+    // live sockets
     let socketCount=0;
     for(const gk of Object.keys(groups)){
       const [ex,market]=gk.split("|");
-      if(ex!=="binance") continue;
       const a=Adapters[ex];
       const list=groups[gk];
-      try{
-        const conns=a.connectWS(market,list,(sym,price)=>{
-          const r=state.rows.get(`${ex}|${market}|${sym}`); if(!r) return;
-          r.price=price;
-          if(isF(r.high)&&isF(r.low)) Object.assign(r,compute(r.price,r.high,r.low));
-          if(isF(r.pAt)) r.toPtPct=((r.price - r.pAt)/r.pAt)*100;
-
-          if(isF(r.ssClose)){
-            const tp=getTargetPriceForRow(r);
-            if(isF(tp)) r.toSsPct = Math.abs(tp - r.ssClose)/r.ssClose*100;
-          }
-          scheduleRender();
-        });
-        socketCount += (conns||[]).length;
-        state.sockets.push(...(conns||[]));
-      }catch{}
+      if(a.connectWS){
+        try{
+          const conns=a.connectWS(market,list,(sym,price)=>{
+            const r=state.rows.get(`${ex}|${market}|${sym}`); if(!r) return;
+            r.price=price;
+            if(isF(r.high)&&isF(r.low)) Object.assign(r,compute(r.price,r.high,r.low));
+            if(isF(r.pAt)) r.toPtPct = ((r.price - r.pAt)/r.pAt)*100;
+            scheduleRender();
+          });
+          socketCount+=(conns||[]).length;
+          state.sockets.push(...(conns||[]));
+        }catch{}
+      }
     }
     wsCount.textContent=String(socketCount);
 
+    // periodic REST backup
     state.restPoll=setInterval(async()=>{
       await Promise.all(Object.keys(groups).map(async gk=>{
         const [ex,market]=gk.split("|");
@@ -1095,190 +912,150 @@
             if(!r) return;
             r.price=p;
             if(isF(r.high)&&isF(r.low)) Object.assign(r,compute(r.price,r.high,r.low));
-            if(isF(r.pAt)) r.toPtPct=((r.price - r.pAt)/r.pAt)*100;
-            if(isF(r.ssClose)){
-              const tp=getTargetPriceForRow(r);
-              if(isF(tp)) r.toSsPct = Math.abs(tp - r.ssClose)/r.ssClose*100;
-            }
+            if(isF(r.pAt)) r.toPtPct=((r.price-r.pAt)/r.pAt)*100;
           });
         }catch{}
       }));
       scheduleRender();
     },5000);
 
-    setStatus("Ready");
-    scheduleRender();
+    computeRecommendations();
+    play.done();
+  }
+
+  async function scanRecentTouches(){
+    setStatus("Scanning recent touches…");
+    const mins=(parseInt($("#lookbackHrs").value||"24",10)||24)*60;
+    const rows=Array.from(state.rows.values()).filter(r=>isF(r.high)&&isF(r.low));
+    let i=0;
+
+    for(const r of rows){
+      const a=Adapters[r.exchangeKey];
+      try{
+        const end=Date.now();
+        const start=end-Math.max(5,mins)*60e3;
+        const interval=mins<=999?"1m":"5m";
+
+        const base = (r.exchangeKey==="binance") ? a.base(r.market) : a.base();
+        const ep = (r.exchangeKey==="binance")
+          ? (r.market==="perp"?"/fapi/v1/klines":"/api/v3/klines")
+          : "/api/v3/klines";
+
+        const url=`${base}${ep}?symbol=${r.symbol}&interval=${interval}&startTime=${start}&endTime=${end}&limit=1000`;
+        const res=await fetch(url); if(!res.ok) throw 0;
+        const arr=await res.json();
+
+        let hitH=false,hitL=false,whenH=null,whenL=null;
+        for(const k of arr){
+          const hi=+k[2], lo=+k[3], t=k[0];
+          if(!hitH && hi>=r.high){hitH=true;whenH=t}
+          if(!hitL && lo<=r.low ){hitL=true;whenL=t}
+        }
+        r.touchedAnyRecent=!!(hitH||hitL);
+        r.whenHighRecent=whenH;
+        r.whenLowRecent=whenL;
+      }catch{
+        r.touchedAnyRecent=false;
+        r.whenHighRecent=r.whenLowRecent=null;
+      }
+      if((++i%16)===0){ scheduleRender(); await new Promise(res=>setTimeout(res,90)); }
+    }
+
+    scheduleRender(); computeRecommendations(); setStatus("Ready"); play.done();
+  }
+
+  async function computeRVOLAll(){
+    const days=state.rvol.days=Math.min(60,Math.max(5,parseInt($("#rvolDays").value||"20",10)||20));
+    setStatus(`Computing RVOL (days=${days})…`);
+    let known=0,i=0;
+    const rows=Array.from(state.rows.values());
+
+    for(const r of rows){
+      const a=Adapters[r.exchangeKey];
+      try{
+        if(r.exchangeKey==="mexc" && r.market==="perp") throw 0;
+
+        const base = (r.exchangeKey==="binance") ? a.base(r.market) : a.base();
+        const ep   = (r.exchangeKey==="binance") ? (r.market==="perp"?"/fapi/v1/klines":"/api/v3/klines") : "/api/v3/klines";
+        const url  = `${base}${ep}?symbol=${r.symbol}&interval=1d&limit=${days}`;
+
+        const resp=await fetch(url); if(!resp.ok) throw 0;
+        const arr=await resp.json(); if(!Array.isArray(arr)||arr.length<5) throw 0;
+
+        let sum=0,cnt=0;
+        for(const k of arr){
+          const close=+k[4], baseVol=+k[5];
+          const quoteVol=isF(+k[7])?+k[7]:(isF(baseVol)&&isF(close)? baseVol*close : NaN);
+          if(isF(quoteVol)){sum+=quoteVol;cnt++;}
+        }
+        const avg=cnt?sum/cnt:null;
+
+        if(isF(avg) && avg>0){
+          r.avgQVol=avg;
+          if(!isF(r.qvol24h)){
+            try{
+              const m=await a.batch24hStats(r.market,[r.symbol]);
+              const st=m.get(r.symbol);
+              if(st) r.qvol24h=st.qvol||null;
+            }catch{}
+          }
+          if(isF(r.qvol24h) && r.qvol24h>=0){ r.rvol=r.qvol24h/avg; known++; }
+          else r.rvol=null;
+        }else{
+          r.avgQVol=null; r.rvol=null;
+        }
+      }catch{
+        r.avgQVol=null; r.rvol=null;
+      }
+      if((++i%12)===0){ rvKnown.textContent=String(known); scheduleRender(); await new Promise(res=>setTimeout(res,80)); }
+    }
+
+    rvKnown.textContent=String(known);
+    scheduleRender(); computeRecommendations(); setStatus("Ready"); play.done();
   }
 
   async function computePAtAll(){
-    const dateStr=$("#date").value || istDateLabelFromMs(Date.now());
-    const timeStr=($("#timeIst").value||"").trim();
-    if(!timeStr){ alert("Set Target Time (IST) to compute P@Target."); return; }
-
+    if(!state.timeIst){ alert("Please set a Target Time (IST) to compute P@Target."); return; }
     setStatus("Fetching P@Target (1m)…");
-    let known=0;
-
+    let known=0, i=0;
     const rows=Array.from(state.rows.values());
-    let idx=0;
     const concurrency=10;
+    let idx=0;
 
     async function worker(){
       while(idx<rows.length){
         const r=rows[idx++];
         const a=Adapters[r.exchangeKey];
         try{
-          if(r.exchangeKey==="mexc" && r.market==="perp") throw 0;
-          const p=await a.priceAtTarget(r.market,r.symbol,dateStr,timeStr);
+          const p=await a.priceAtTarget(r.market,r.symbol,state.dateStr,state.timeIst);
           if(isF(p)){
             r.pAt=p;
-            r.toPtPct = isF(r.price) ? ((r.price - p)/p*100) : null;
+            r.toPtPct=((isF(r.price)?r.price:p)-p)/p*100;
             known++;
-          }else{
-            r.pAt=null; r.toPtPct=null;
-          }
+          }else{ r.pAt=null; r.toPtPct=null; }
         }catch{
           r.pAt=null; r.toPtPct=null;
         }
-        if(known%25===0){
-          ptKnown.textContent=String(known);
-          scheduleRender();
-          await new Promise(res=>setTimeout(res,50));
-        }
+        if((i++%20)===0){ ptKnown.textContent=String(known); scheduleRender(); await new Promise(res=>setTimeout(res,60)); }
       }
     }
 
     await Promise.all(Array.from({length:concurrency},worker));
     ptKnown.textContent=String(known);
-    setStatus(`Ready (P@Target for ${known})`);
-    scheduleRender();
+    scheduleRender(); setStatus(`Ready (${known} P@Target)`); play.done();
   }
 
-  async function computePatternsAll(){
-    setStatus("Computing patterns…");
-    state.pat.tf = $("#patternTf").value || "1h";
-    state.pat.accLB = Math.min(80,Math.max(5,parseInt($("#accLB").value||"20",10)||20));
-    state.pat.accVM = Math.min(5,Math.max(0.8,parseFloat($("#accVM").value||"1.2")||1.2));
-    state.pat.ssLB  = Math.min(300,Math.max(30,parseInt($("#ssLB").value||"120",10)||120));
-    state.pat.ssTfs = $$(".ssTf").filter(x=>x.checked).map(x=>x.value);
-    if(!state.pat.ssTfs.length) state.pat.ssTfs = ["1h"];
-
-    const dateStr=$("#date").value || istDateLabelFromMs(Date.now());
-    const timeStr=($("#timeIst").value||"").trim()||null;
-    const end = timeStr ? istDateTimeToUtcMs(dateStr,timeStr) : (istDayStartUtcMs(dateStr)+24*3600e3-1);
-    state.patEndMs=end;
-
-    const rows=Array.from(state.rows.values());
-    const concurrency=8;
-    let idx=0, known=0;
-
-    async function worker(){
-      while(idx<rows.length){
-        const r=rows[idx++];
-        const a=Adapters[r.exchangeKey];
-        try{
-          if(r.exchangeKey==="mexc" && r.market==="perp") throw 0;
-
-          // Accumulation
-          const accTf=state.pat.tf;
-          const accMs=intervalMsMap[accTf]; if(!accMs) throw 0;
-          const accNeed=Math.min(300, Math.max(60, state.pat.accLB+20));
-          const accArr=await a.klineSeries(r.market,r.symbol,accTf,end,accNeed);
-          if(!accArr||!accArr.length) throw 0;
-
-          let accCi=-1;
-          for(let k=0;k<accArr.length;k++){
-            const ot=+accArr[k][0];
-            if(ot<=end && end<ot+accMs){ accCi=k; break; }
-          }
-          if(accCi===-1) accCi=accArr.length-1;
-
-          const kc=accArr[accCi];
-          const c={t:+kc[0], o:+kc[1], h:+kc[2], l:+kc[3], cl:+kc[4]};
-          const vol=quoteVolFromKline(kc);
-
-          let sum=0,cnt=0;
-          const startIdx=Math.max(0, accCi - state.pat.accLB);
-          for(let k=startIdx;k<accCi;k++){
-            const qv=quoteVolFromKline(accArr[k]);
-            if(isF(qv)){ sum+=qv; cnt++; }
-          }
-          const avgVol=cnt?sum/cnt:null;
-          const acc=classifyAccumulation({o:c.o,h:c.h,l:c.l,cl:c.cl,vol,avgVol,volMult:state.pat.accVM});
-          r.accType=acc.type;
-          r.accScore=isF(acc.score)?acc.score:null;
-
-          // Shooting Star multi-TF
-          let bestLast={ts:null, close:null, tf:null};
-          let atTarget={flag:false, tf:null};
-
-          for(const tf of state.pat.ssTfs){
-            const ms=intervalMsMap[tf]; if(!ms) continue;
-            const need=Math.min(300, Math.max(90, state.pat.ssLB+30));
-            const arr=await a.klineSeries(r.market,r.symbol,tf,end,need);
-            if(!arr||!arr.length) continue;
-
-            let ci=-1;
-            for(let k=0;k<arr.length;k++){
-              const ot=+arr[k][0];
-              if(ot<=end && end<ot+ms){ ci=k; break; }
-            }
-            if(ci===-1) ci=arr.length-1;
-
-            const tgt=arr[ci];
-            const tgtC={t:+tgt[0], o:+tgt[1], h:+tgt[2], l:+tgt[3], cl:+tgt[4]};
-            if(isShootingStarCandle(tgtC) && !atTarget.flag){
-              atTarget={flag:true, tf};
-            }
-
-            for(let k=ci-1;k>=Math.max(0, ci-state.pat.ssLB);k--){
-              const kk=arr[k];
-              const cc={t:+kk[0], o:+kk[1], h:+kk[2], l:+kk[3], cl:+kk[4]};
-              if(isShootingStarCandle(cc)){
-                if(!bestLast.ts || cc.t>bestLast.ts) bestLast={ts:cc.t, close:cc.cl, tf};
-                break;
-              }
-            }
-          }
-
-          r.ssNow = atTarget.flag ? true : false;
-          r.ssNowTf = atTarget.tf;
-          r.ssLastTs = bestLast.ts;
-          r.ssTf = bestLast.tf;
-          r.ssClose = bestLast.close;
-
-          if(isF(r.ssClose)){
-            const tp=getTargetPriceForRow(r);
-            r.toSsPct = isF(tp) ? (Math.abs(tp - r.ssClose)/r.ssClose*100) : null;
-          }else r.toSsPct=null;
-
-          known++;
-        }catch{
-          r.accType=null; r.accScore=null;
-          r.ssNow=null; r.ssNowTf=null;
-          r.ssLastTs=null; r.ssTf=null; r.ssClose=null; r.toSsPct=null;
-        }
-
-        if(known%25===0){
-          patKnown.textContent=String(known);
-          scheduleRender();
-          await new Promise(res=>setTimeout(res,60));
-        }
-      }
-    }
-
-    await Promise.all(Array.from({length:concurrency},worker));
-    patKnown.textContent=String(known);
-    setStatus(`Ready (Patterns for ${known})`);
-    scheduleRender();
-  }
-
-  // init
+  // --- init ---
   (async function init(){
-    buildChips();              // ✅ create quick chips
-    $("#date").value = istDateLabelFromMs(Date.now());
+    state.marketType="spot";
+    state.exchanges=new Set(["binance"]);
+    state.timeframe="auto";
     await loadSymbolsTop();
     await loadAll();
+    setStatus("Ready");
   })();
+
+  $("#mcFetch").addEventListener("click",async()=>{ await fetchMarketCaps(); });
 
   window.addEventListener("beforeunload",()=>{
     clearInterval(state.restPoll);
